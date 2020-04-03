@@ -49,10 +49,12 @@ class CommentUpdateDestroySerializer(serializers.ModelSerializer):
 
 class ShortCommentSerializer(serializers.ModelSerializer):
     author_id = serializers.RelatedField(read_only=True, source='profile.id')
+
     class Meta:
         model = Comments
         fields = [
             'id',
             'text',
+            'ranobe_id',
             'author_id'
         ]
