@@ -15,6 +15,7 @@ from .models import Profile, BookReadingStatus
 from django.shortcuts import get_object_or_404
 from comments.models import Comments
 
+
 class MainProfileView(ListCreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
@@ -42,7 +43,7 @@ class ProfileStatisticView(generics.RetrieveAPIView):
     def retrieve(self, request, *args, **kwargs):
         obj = self.get_object()
         comments = Comments.objects.all().filter(author_id=request.user.id)
-        last_comments = ShortCommentSerializer(comments[:5], data=request.data, many=True)
+        last_comments = ShortCommentSerializer(comments[:5], many=True)
         planned_books = obj.read_status.filter(bookreadingstatus__choices="PL", bookreadingstatus__profile_id=obj.id)
         reading_books = obj.read_status.filter(bookreadingstatus__profile_id=obj.id, bookreadingstatus__choices="RDG")
         read_books = obj.read_status.filter(bookreadingstatus__profile_id=obj.id, bookreadingstatus__choices="RD")
@@ -50,13 +51,12 @@ class ProfileStatisticView(generics.RetrieveAPIView):
         read_books_amount = len(read_books)
         reading_books_amount = len(reading_books)
         planned_books_amount = len(planned_books)
-        last_comments.is_valid(raise_exception=True)
-        return Response({'comments-amount': comments_amount,
-                         'last-comments': last_comments.data,
+        print(last_comments)
+        return Response({'comments_amount': comments_amount,
+                         'last_comments': last_comments.data,
                          'planned_books_amount': planned_books_amount,
                          'reading_books_amount': reading_books_amount,
                          'read_books_amount': read_books_amount}, status=status.HTTP_200_OK)
-
 
 
 class ProfileView(generics.RetrieveAPIView, mixins.DestroyModelMixin, mixins.UpdateModelMixin):
