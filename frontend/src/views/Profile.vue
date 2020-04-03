@@ -15,7 +15,10 @@
                             <h3>Статистика</h3>
                         </div>
                         <div class="block-info">
-                            <span>4to to</span>
+                            <div><span>Запланировано: </span> <span>{{planned_books_amount}}</span></div>
+                            <div><span>Прочитано: </span> <span>{{read_books_amount}}</span></div>
+                            <div><span>Читаю: </span> <span>{{reading_books_amount}}</span></div>
+                            <div><span>Всего комментариев: </span> <span>{{comments_amount}}</span></div>
                         </div>
                     </div>
                     <div class="profile-statistic">
@@ -31,9 +34,10 @@
                 </div>
                 <div class="profile-info">
                     <h3>Информация</h3>
-                    <span>Имя - {{name}}</span>
-                    <span>Дата рождения - {{birth}}</span>
-                    <span>Email - {{email}}</span>
+                    <div><h4>Последние комментарии: </h4></div>
+                    <div class="comments" v-for="comment in last_comments" :key="comment.id">
+                        <a :href="comment.link"><span>{{comment.text}}</span></a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -87,8 +91,9 @@
                         this.read_books_amount = resp.data.read_books_amount;
                         if (resp.data.last_comments.length === 1) {
                             this.last_comments.push(resp.data.last_comments[0])
-                        } else if (resp.data.last_comments > 1) {
+                        } else if (resp.data.last_comments.length > 1) {
                             for (let i = 0; i < resp.data.last_comments.length; i++) {
+                                resp.data.last_comments[i].link = '?#/ranobe/' + resp.data.last_comments[i].ranobe_id + '/details';
                                 this.last_comments.push(resp.data.last_comments[i]);
                             }
                         }
@@ -116,6 +121,7 @@
         grid-row-gap: 10px;
         grid-column-gap: 22px;
     }
+
     .user-header {
         position: relative;
         bottom: -186px;
@@ -123,28 +129,33 @@
         display: flex;
         align-items: flex-start;
     }
+
     .img-container > img {
         height: 150px;
         width: 150px;
         border: solid 3px #FFFFFF;
         border-radius: 50%;
     }
+
     .profile-header {
         grid-area: header;
         min-height: 200px;
         background: url('http://127.0.0.1:8080/profile.svg') no-repeat;
         background-size: cover;
     }
+
     .info-container {
         grid-area: prof-cont;
 
 
     }
+
     .profile-shortcuts {
         margin-top: 40px;
         display: flex;
         justify-content: space-around;
     }
+
     .profile-statistic {
         width: 285px;
         background: #FFFFFF;
@@ -152,6 +163,7 @@
         border-radius: 2px;
         margin-bottom: 15px;
     }
+
     .block-name {
         overflow: hidden;
         height: 44px;
@@ -163,19 +175,23 @@
         padding: 0 10px 10px;
         border-bottom: solid 2px #40abe9;
     }
+
     .info-column {
         width: 285px;
         display: flex;
         flex-direction: column;
     }
+
     .block-info {
         padding: 10px;
         display: flex;
         flex-direction: column;
     }
+
     .block-info > * {
         margin-top: 3px;
     }
+
     .profile-info {
         background: #FFFFFF;
         padding: 20px;
