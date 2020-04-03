@@ -291,7 +291,7 @@
         margin-left: auto;
         margin-right: auto;
         width: 70%;
-        height: 30px;
+        height: 20px;
         border-bottom-left-radius: 5px;
         border-bottom-right-radius: 5px;
         text-align: center;
