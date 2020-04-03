@@ -249,7 +249,7 @@
             },
             normalizeRanobeName(name) {
               //  If name contains char "/" return sliced name else return full name
-              if (name.indexOf('/') !== -1) {
+              if (name.indexOf('/') === -1) {
                   return name
               } else {
                   return name.substring(name.indexOf('/') + 1)
