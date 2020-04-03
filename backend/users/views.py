@@ -51,7 +51,6 @@ class ProfileStatisticView(generics.RetrieveAPIView):
         read_books_amount = len(read_books)
         reading_books_amount = len(reading_books)
         planned_books_amount = len(planned_books)
-        print(last_comments)
         return Response({'comments_amount': comments_amount,
                          'last_comments': last_comments.data,
                          'planned_books_amount': planned_books_amount,
