@@ -32,14 +32,15 @@
                     <h1>{{this.ranobe_name}}</h1>
                     <h2>{{this.alternate_name}}</h2>
                 </div>
-                <div class="ranobe-genres">
+                <div class="ranobe-genres" v-if="showCheck(genres)">
                     <h3>Жанры:</h3>
                     <span v-for="genre in this.genres" :key="genre"><a href="#">{{genre}}</a></span>
                 </div>
-                <div class="ranobe-description">
+                <div class="ranobe-description" v-if="showCheck(ranobe_description)">
                     <h3>Описание:</h3>
                     <div class="description-box">{{this.ranobe_description}}</div>
                 </div>
+                <div class="comment-show-button" v-if="!show_comments" @click="show_comments = true">Загрузить комментарии</div>
                 <Comments v-bind:ranobeId="ranobe_id" v-if="show_comments"/>
             </div>
         </div>
@@ -73,7 +74,6 @@
         </div>
     </div>
 </template>
-<!--TODO: ADD AJAX LOGIC FOR add state-->
 <script>
     import axios from 'axios';
     import Comments from "../components/Comments";
@@ -129,7 +129,7 @@
             lazyloadComments() {
                 let pos1 = document.documentElement.offsetHeight;
                 let pos2 = document.documentElement.scrollTop + window.innerHeight;
-                if (pos1 === Math.floor(pos2)) {
+                if (pos1 - 30 >= Math.floor(pos2)) {
                     this.show_comments = true
                 }
             },
@@ -213,18 +213,42 @@
                             this.book_reading_state = 'Прочитано'
                         }
                     })
-            }
+            },
+            showCheck(any_list) {
+              if (any_list != null) {
+                  if (any_list.length > 0) {
+                      return true
+                  }
+              }
+            },
         },
         mounted() {
+            //reset scroll position cause window saving before page scroll pos
+            window.scrollTo(0,0);
+
             this.getData();
             window.addEventListener('scroll', this.lazyloadComments);
             this.checkBookmark();
             this.getBookState();
-        }
+        },
     }
 </script>
 
 <style scoped>
+    .comment-show-button {
+        margin-top: 70px;
+        height: 30px;
+        width: 100%;
+        border: #3c3c3c 1px solid;
+        border-radius: 7px;
+        background-color: #FFFFFF;
+        font-weight: bold;
+        text-align: center;
+        padding-top: 10px;
+    }
+    .comment-show-button:hover, .comment-show-button:active {
+        box-shadow: 0 1px 1px 1px rgba(0, 0, 0, .1), 0 0 1px 1px #3c82e6;
+    }
     .tags-column {
         margin-top: 20px;
         margin-right: auto;
@@ -281,9 +305,12 @@
     .show-tags:hover, .show-tags:active {
         box-shadow: 0 1px 1px 1px rgba(0, 0, 0, .1), 0 0 1px 1px #3c82e6;
     }
+
     .ranobe-container {
         background-color: white;
         padding-top: 10px;
+        height: auto;
+        min-height: 100vh;
         width: 100%;
         justify-self: center;
         display: inline-flex;
