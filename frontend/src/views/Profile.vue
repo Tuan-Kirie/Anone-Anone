@@ -56,7 +56,12 @@
                 name: '',
                 img: '',
                 birth: '',
-                email: ''
+                email: '',
+                comments_amount: null,
+                last_comments: [],
+                planned_books_amount: null,
+                reading_books_amount: null,
+                read_books_amount: null,
             }
         },
         methods: {
@@ -67,14 +72,32 @@
                             this.img = resp.data.img;
                             this.birth = resp.data.birth_date;
                             this.email = resp.data.email;
-                            this.name = resp.data.username
+                            this.name = resp.data.username;
                             localStorage.setItem('profileimg', this.img)
                         }
                     )
+            },
+            getProfileStatistics() {
+                let url = 'http://127.0.0.1:8000/user/profile/statistic';
+                axios.get(url, {headers: {'Authorization': "JWT " + this.token}})
+                    .then(resp => {
+                        this.comments_amount = resp.data.comments_amount;
+                        this.planned_books_amount = resp.data.planned_books_amount;
+                        this.reading_books_amount = resp.data.reading_books_amount;
+                        this.read_books_amount = resp.data.read_books_amount;
+                        if (resp.data.last_comments.length === 1) {
+                            this.last_comments.push(resp.data.last_comments[0])
+                        } else if (resp.data.last_comments > 1) {
+                            for (let i = 0; i < resp.data.last_comments.length; i++) {
+                                this.last_comments.push(resp.data.last_comments[i]);
+                            }
+                        }
+                    })
             }
         },
         mounted() {
-            this.getProfileData()
+            this.getProfileData();
+            this.getProfileStatistics();
         }
     }
 </script>
