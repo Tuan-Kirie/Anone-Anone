@@ -33,6 +33,17 @@
                     </div>
                 </div>
                 <div class="profile-info">
+                    <div class="profile-menu-list">
+                        <div class="profile-bookmarks">
+                            Закладки
+                        </div>
+                        <div class="profile-comments">
+                            Комментарии
+                        </div>
+                        <div class="profile-ranobe-list">
+                            Список ранобэ
+                        </div>
+                    </div>
                     <h3>Информация</h3>
                     <div><h4>Последние комментарии: </h4></div>
                     <div class="comments" v-for="comment in last_comments" :key="comment.id">
@@ -198,5 +209,26 @@
         box-shadow: 0 0 0 1px #dcdfe6;
         border-radius: 2px;
         width: 900px;
+    }
+
+    .profile-menu-list {
+        width: 100%;
+        height: 40px;
+        border-bottom: 2px solid rgba(34, 36, 38, .15);
+        display: flex;
+    }
+
+    .profile-menu-list > * {
+        cursor: pointer;
+        margin-right: 20px;
+    }
+
+    .profile-menu-list > div {
+        height: 100%;
+    }
+
+    .profile-menu-list > div:active, .profile-menu-list > div:hover {
+        border-bottom: 2px solid #1b1c1d;
+        color: rgba(0, 0, 0, .95);
     }
 </style>
