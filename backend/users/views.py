@@ -7,6 +7,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from comments.serializer import CommentSerializer, ShortCommentSerializer
+from ranobe.serializer import RanobeSerializer
 from .permission import ProfileOwnPermission
 from .serializer import UserSerializer, ProfileSerializer, ShortUserSerializer, BookmarkSerializer, \
     UpdateBookmarkSerializer, ProfileBookmarkSerializer, BookStatusSerializer, BookReadingStatusSerializer, \
@@ -90,10 +91,20 @@ class ShortUserView(generics.RetrieveAPIView):
         return obj
 
 
-class BookmarkCheckView(generics.ListAPIView):
-    permission_classes = (permissions.IsAuthenticated,)
+class BookmarkCheckView(generics.RetrieveAPIView):
+    permission_classes = (permissions.IsAuthenticated, ProfileOwnPermission)
     serializer_class = ProfileBookmarkSerializer
     queryset = Profile.objects.all()
+
+    def get_object(self):
+        user = self.request.user
+        return get_object_or_404(Profile, user=user)
+
+    def retrieve(self, request, *args, **kwargs):
+        obj = self.get_object()
+        bookmarks = obj.bookmarked.all()
+        response_data = RanobeSerializer(bookmarks, many=True)
+        return Response(response_data.data, status=status.HTTP_200_OK)
 
 
 class BookmarkUpdateView(generics.RetrieveUpdateDestroyAPIView):
