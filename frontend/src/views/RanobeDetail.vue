@@ -230,7 +230,7 @@
             window.addEventListener('scroll', this.lazyloadComments);
             this.checkBookmark();
             this.getBookState();
-        },
+        }
     }
 </script>
 

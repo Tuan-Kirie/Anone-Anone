@@ -114,4 +114,4 @@ class UpdateBookmarkSerializer(serializers.Serializer):
 class ProfileBookmarkSerializer(serializers.Serializer):
     class Meta:
         model = Profile
-        fields = "__all__"
+        fields = "bookmarked"
