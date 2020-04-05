@@ -34,13 +34,13 @@
                 </div>
                 <div class="profile-info">
                     <div class="profile-menu-list">
-                        <div class="profile-bookmarks">
+                        <div v-bind:class="{active: isActive.bookmarks}" @click="isActive.bookmarks = true; isActive.ranobe=false; isActive.comments=false">
                             Закладки
                         </div>
-                        <div class="profile-comments">
+                        <div v-bind:class="{active: isActive.comments}" @click="isActive.comments = true; isActive.bookmarks=false; isActive.ranobe=false">
                             Комментарии
                         </div>
-                        <div class="profile-ranobe-list">
+                        <div v-bind:class="{active: isActive.ranobe}" @click="isActive.ranobe = true; isActive.bookmarks=false; isActive.comments=false">
                             Список ранобэ
                         </div>
                     </div>
@@ -77,6 +77,11 @@
                 planned_books_amount: null,
                 reading_books_amount: null,
                 read_books_amount: null,
+                isActive: {
+                    bookmarks: false,
+                    comments: false,
+                    ranobe: false,
+                },
             }
         },
         methods: {
@@ -132,7 +137,6 @@
         grid-row-gap: 10px;
         grid-column-gap: 22px;
     }
-
     .user-header {
         position: relative;
         bottom: -186px;
@@ -140,33 +144,27 @@
         display: flex;
         align-items: flex-start;
     }
-
     .img-container > img {
         height: 150px;
         width: 150px;
         border: solid 3px #FFFFFF;
         border-radius: 50%;
     }
-
     .profile-header {
         grid-area: header;
         min-height: 200px;
         background: url('http://127.0.0.1:8080/profile.svg') no-repeat;
         background-size: cover;
     }
-
     .info-container {
         grid-area: prof-cont;
 
-
     }
-
     .profile-shortcuts {
         margin-top: 40px;
         display: flex;
         justify-content: space-around;
     }
-
     .profile-statistic {
         width: 285px;
         background: #FFFFFF;
@@ -174,7 +172,6 @@
         border-radius: 2px;
         margin-bottom: 15px;
     }
-
     .block-name {
         overflow: hidden;
         height: 44px;
@@ -186,23 +183,19 @@
         padding: 0 10px 10px;
         border-bottom: solid 2px #40abe9;
     }
-
     .info-column {
         width: 285px;
         display: flex;
         flex-direction: column;
     }
-
     .block-info {
         padding: 10px;
         display: flex;
         flex-direction: column;
     }
-
     .block-info > * {
         margin-top: 3px;
     }
-
     .profile-info {
         background: #FFFFFF;
         padding: 20px;
@@ -210,24 +203,24 @@
         border-radius: 2px;
         width: 900px;
     }
-
     .profile-menu-list {
         width: 100%;
         height: 40px;
         border-bottom: 2px solid rgba(34, 36, 38, .15);
         display: flex;
     }
-
     .profile-menu-list > * {
         cursor: pointer;
         margin-right: 20px;
     }
-
     .profile-menu-list > div {
         height: 100%;
     }
-
-    .profile-menu-list > div:active, .profile-menu-list > div:hover {
+    .profile-menu-list > .active {
+        font-weight: bold;
+        border-bottom: 2px solid #1b1c1d;
+    }
+    .profile-menu-list > div:hover {
         border-bottom: 2px solid #1b1c1d;
         color: rgba(0, 0, 0, .95);
     }
