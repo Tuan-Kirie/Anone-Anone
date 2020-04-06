@@ -41,10 +41,11 @@ class ProfileStatisticView(generics.RetrieveAPIView):
         user = self.request.user
         return get_object_or_404(Profile, user=user)
 
+    # Deactivated comments list
     def retrieve(self, request, *args, **kwargs):
         obj = self.get_object()
         comments = Comments.objects.all().filter(author_id=request.user.id)
-        last_comments = ShortCommentSerializer(comments[:5], many=True)
+        # last_comments = ShortCommentSerializer(comments[:5], many=True)
         planned_books = obj.read_status.filter(bookreadingstatus__choices="PL", bookreadingstatus__profile_id=obj.id)
         reading_books = obj.read_status.filter(bookreadingstatus__profile_id=obj.id, bookreadingstatus__choices="RDG")
         read_books = obj.read_status.filter(bookreadingstatus__profile_id=obj.id, bookreadingstatus__choices="RD")
@@ -53,10 +54,27 @@ class ProfileStatisticView(generics.RetrieveAPIView):
         reading_books_amount = len(reading_books)
         planned_books_amount = len(planned_books)
         return Response({'comments_amount': comments_amount,
-                         'last_comments': last_comments.data,
+                         # 'last_comments': last_comments.data,
                          'planned_books_amount': planned_books_amount,
                          'reading_books_amount': reading_books_amount,
                          'read_books_amount': read_books_amount}, status=status.HTTP_200_OK)
+
+
+class ProfileCommentsView(generics.RetrieveAPIView):
+    permission_classes = (
+        permissions.IsAuthenticated,
+        ProfileOwnPermission,
+    )
+
+    def get_object(self):
+        user = self.request.user
+        return get_object_or_404(Profile, user=user)
+
+    def retrieve(self, request, *args, **kwargs):
+        comments = Comments.objects.all().filter(author_id=request.user.id)
+        data = ShortCommentSerializer(comments, many=True).data
+        # bug with queryset if response serializer data without dict moustaches
+        return Response({"comments": data}, status=status.HTTP_200_OK)
 
 
 class ProfileView(generics.RetrieveAPIView, mixins.DestroyModelMixin, mixins.UpdateModelMixin):
