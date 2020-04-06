@@ -6,7 +6,7 @@ from rest_framework.generics import GenericAPIView, ListCreateAPIView, CreateAPI
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from comments.serializer import CommentSerializer, ShortCommentSerializer
+from comments.serializer import CommentSerializer, ShortCommentSerializer, ProfileCommentSerializer
 from ranobe.serializer import RanobeSerializer
 from .permission import ProfileOwnPermission
 from .serializer import UserSerializer, ProfileSerializer, ShortUserSerializer, BookmarkSerializer, \
@@ -61,6 +61,7 @@ class ProfileStatisticView(generics.RetrieveAPIView):
 
 
 class ProfileCommentsView(generics.RetrieveAPIView):
+    # Do not forget to add pagination
     permission_classes = (
         permissions.IsAuthenticated,
         ProfileOwnPermission,
@@ -72,7 +73,7 @@ class ProfileCommentsView(generics.RetrieveAPIView):
 
     def retrieve(self, request, *args, **kwargs):
         comments = Comments.objects.all().filter(author_id=request.user.id)
-        data = ShortCommentSerializer(comments, many=True).data
+        data = ProfileCommentSerializer(comments, many=True).data
         # bug with queryset if response serializer data without dict moustaches
         return Response({"comments": data}, status=status.HTTP_200_OK)
 
