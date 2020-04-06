@@ -34,20 +34,33 @@
                 </div>
                 <div class="profile-info">
                     <div class="profile-menu-list">
-                        <div v-bind:class="{active: isActive.bookmarks}" @click="isActive.bookmarks = true; isActive.ranobe=false; isActive.comments=false">
+                        <div v-bind:class="{active: isActive.bookmarks}" @click="getProfileBookmarks">
                             Закладки
                         </div>
-                        <div v-bind:class="{active: isActive.comments}" @click="isActive.comments = true; isActive.bookmarks=false; isActive.ranobe=false">
+                        <div v-bind:class="{active: isActive.comments}"
+                             @click="isActive.comments = true; isActive.bookmarks=false; isActive.ranobe=false">
                             Комментарии
                         </div>
-                        <div v-bind:class="{active: isActive.ranobe}" @click="isActive.ranobe = true; isActive.bookmarks=false; isActive.comments=false">
+                        <div v-bind:class="{active: isActive.ranobe}"
+                             @click="isActive.ranobe = true; isActive.bookmarks=false; isActive.comments=false">
                             Список ранобэ
                         </div>
                     </div>
-                    <h3>Информация</h3>
-                    <div><h4>Последние комментарии: </h4></div>
-                    <div class="comments" v-for="comment in last_comments" :key="comment.id">
-                        <a :href="comment.link"><span>{{comment.text}}</span></a>
+                    <!--                    <h3>Информация</h3>-->
+                    <!--                    <div><h4>Последние комментарии: </h4></div>-->
+                    <!--                    <div class="comments" v-for="comment in last_comments" :key="comment.id">-->
+                    <!--                        <a :href="comment.link"><span>{{comment.text}}</span></a>-->
+                    <!--                    </div>-->
+                    <div class="content" v-for="data in content" :key="data.id">
+                        <div class="ranobe-container">
+                            <div class="ranobe-img">
+                                <img v-bind:src="data.image" alt="">
+                            </div>
+                            <div class="ranobe-info">
+                                <div class="ranobe-name">{{data.name}}</div>
+
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -82,6 +95,7 @@
                     comments: false,
                     ranobe: false,
                 },
+                content: [],
             }
         },
         methods: {
@@ -115,9 +129,35 @@
                         }
                     })
             },
-            // getProfileBookmarks() {
-            //     let url = ''
-            // }
+            getProfileBookmarks() {
+                this.content = [];
+                this.isActive.bookmarks = true;
+                this.isActive.ranobe = false;
+                this.isActive.comments = false;
+                let url = 'http://127.0.0.1:8000/user/profile/bookmark';
+                axios.get(url, {headers: {'Authorization': "JWT " + this.token}})
+                    .then(
+                        resp => {
+                            if (resp.data.length === 0) {
+                                this.content = ['Нет записей',]
+                            } else {
+                                for (let b = 0; b !== resp.data.length; b++) {
+                                    resp.data[b].image = 'http://127.0.0.1:8000' + resp.data[b].image;
+                                    this.content.push(resp.data[b])
+                                }
+                                console.log(this.content)
+                            }
+                        }
+                    ).catch(er => console.log(er))
+            },
+            normalizeRanobeName(name) {
+                //  If name contains char "/" return sliced name else return full name
+                if (name.indexOf('/') === -1) {
+                    return name
+                } else {
+                    return name.substring(name.indexOf('/') + 1)
+                }
+            },
         },
         mounted() {
             this.getProfileData();
@@ -127,6 +167,21 @@
 </script>
 
 <style scoped>
+    .ranobe-img > img {
+        display: block;
+        height: 100px;
+        width: 100px;
+    }
+    .content {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+    .ranobe-container {
+        width: 100%;
+        height: 120px;
+        display: flex;
+    }
     .profile-container {
         width: 100%;
         max-width: 100%;
@@ -161,7 +216,6 @@
     }
     .info-container {
         grid-area: prof-cont;
-
     }
     .profile-shortcuts {
         margin-top: 40px;
@@ -227,4 +281,5 @@
         border-bottom: 2px solid #1b1c1d;
         color: rgba(0, 0, 0, .95);
     }
+
 </style>

@@ -54,10 +54,12 @@ class ChapterSerializer(serializers.ModelSerializer):
         model = Chapters
         fields = ("id", 'chapter_name')
 
+
 class DetailChapterSerializer(serializers.ModelSerializer):
     class Meta:
         model = Chapters
         fields = "__all__"
+
 
 class TagsSerializer(serializers.ModelSerializer):
     class Meta:
