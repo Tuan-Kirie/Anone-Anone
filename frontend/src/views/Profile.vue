@@ -114,7 +114,10 @@
                             }
                         }
                     })
-            }
+            },
+            // getProfileBookmarks() {
+            //     let url = ''
+            // }
         },
         mounted() {
             this.getProfileData();

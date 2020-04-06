@@ -201,9 +201,9 @@ class BookStatusUpdateView(generics.RetrieveUpdateDestroyAPIView):
         obj = self.get_object()
         ranobe = kwargs['pk']
         profile_id = obj.id
-        filter = BookReadingStatus.objects.filter(profile_id=profile_id, ranobe_id=ranobe)
-        if len(filter) > 0:
-            filter.delete()
+        data = BookReadingStatus.objects.filter(profile_id=profile_id, ranobe_id=ranobe)
+        if len(data) > 0:
+            data.delete()
             return Response({"result": True}, status=status.HTTP_202_ACCEPTED)
         else:
             return Response({"result": False}, status=status.HTTP_204_NO_CONTENT)
