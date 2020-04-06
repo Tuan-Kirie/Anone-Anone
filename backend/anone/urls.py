@@ -6,13 +6,14 @@ from rest_framework_jwt.views import obtain_jwt_token
 from rest_framework_jwt.views import verify_jwt_token
 from ranobe.views import RanobeList, RanobeDetailView, ChapterPageView, DetailChapterPage
 from users.views import MainProfileView, CreateUserView, ProfileView, ShortUserView, BookmarkUpdateView, \
-    BookmarkCheckView, BookStatusUpdateView, ProfileStatisticView
+    BookmarkCheckView, BookStatusUpdateView, ProfileStatisticView, ProfileCommentsView
 from django.conf.urls.static import static
 from django.conf import settings
 from django.contrib.staticfiles.storage import staticfiles_storage
 from comments.views import CommentView, CommentCreateView, UpdateDestroyCommentView
 
 from ranobe.views import TagsView, GenresView
+
 
 urlpatterns = [
     url(r'^favicon\.ico$', RedirectView.as_view(url=staticfiles_storage.url('favicon.ico'), permanent=True)),
@@ -29,6 +30,7 @@ urlpatterns = [
     path('user/profile/', ProfileView.as_view()),
     path('user/profile/bookmark', BookmarkCheckView.as_view()),
     path('user/profile/statistic', ProfileStatisticView.as_view()),
+    path('user/profile/comments', ProfileCommentsView.as_view()),
     path('admin/', admin.site.urls),
     url(r'^ranobe/(?P<pk>[0-9]+)/comments/$', CommentView.as_view()),
     url(r'^ranobe/(?P<pk>[0-9]+)/comments/post/$', CommentCreateView.as_view()),
