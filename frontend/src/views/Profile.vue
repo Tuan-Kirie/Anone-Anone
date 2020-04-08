@@ -78,6 +78,18 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="content-selector" v-if="isActive.ranobe">
+                            <div class="ranobes-container">
+                                <div class="ranobe-filter">
+                                    <div><span>Запланировано</span></div>
+                                    <div><span>Читаю</span></div>
+                                    <div><span>Почитано</span></div>
+                                </div>
+                                <div class="ranobe-content-list">
+                                    <div class="ranobe-element"></div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -207,6 +219,16 @@
 </script>
 
 <style scoped>
+    .ranobe-filter {
+        margin-top: 10px;
+        display: inline-flex;
+        width: 100%;
+        justify-content: space-around;
+
+    }
+    .ranobe-filter > div {
+        cursor: pointer;
+    }
     .comment-simple-menu {
         width: available;
         max-lines: 1;
@@ -230,11 +252,17 @@
         width: available;
         overflow: hidden;
         height: auto;
-        overflow-wrap: break-word;
-        text-overflow: ellipsis;
     }
     .comment-text {
         font-size: small;
+        padding: 5px;
+        border: 1px solid #bfbfbf;
+        border-radius: 4px;
+        margin-top: 10px;
+        max-height:80px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+
     }
     .ranobe-shortcut {
         height: 100%;
@@ -291,9 +319,9 @@
         max-height: 100%;
         overflow: hidden;
         background: #eeeeee;
-        height: 1300px;
+        height: auto;
         display: grid;
-        /*DELETED header grid are, do not forget*/
+        /*DELETED header grid area, do not forget*/
         grid-template-areas: "prof-cont prof-cont";
         grid-template-rows: 0.3fr 1fr;
         grid-row-gap: 10px;
