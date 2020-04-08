@@ -6,12 +6,12 @@ from rest_framework.generics import GenericAPIView, ListCreateAPIView, CreateAPI
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from comments.serializer import CommentSerializer, ShortCommentSerializer
+from comments.serializer import CommentSerializer, ShortCommentSerializer, ProfileCommentSerializer
 from ranobe.serializer import RanobeSerializer
 from .permission import ProfileOwnPermission
 from .serializer import UserSerializer, ProfileSerializer, ShortUserSerializer, BookmarkSerializer, \
     UpdateBookmarkSerializer, ProfileBookmarkSerializer, BookStatusSerializer, BookReadingStatusSerializer, \
-    UpdateBookReadingStatusSerializer
+    UpdateBookReadingStatusSerializer, BookreadingStatusProfileSerializer
 from .models import Profile, BookReadingStatus
 from django.shortcuts import get_object_or_404
 from comments.models import Comments
@@ -61,6 +61,7 @@ class ProfileStatisticView(generics.RetrieveAPIView):
 
 
 class ProfileCommentsView(generics.RetrieveAPIView):
+    # Do not forget to add pagination
     permission_classes = (
         permissions.IsAuthenticated,
         ProfileOwnPermission,
@@ -72,9 +73,28 @@ class ProfileCommentsView(generics.RetrieveAPIView):
 
     def retrieve(self, request, *args, **kwargs):
         comments = Comments.objects.all().filter(author_id=request.user.id)
-        data = ShortCommentSerializer(comments, many=True).data
+        data = ProfileCommentSerializer(comments, many=True).data
         # bug with queryset if response serializer data without dict moustaches
         return Response({"comments": data}, status=status.HTTP_200_OK)
+
+
+class ProfileRanobesView(generics.RetrieveAPIView):
+    permission_classes = (
+        permissions.IsAuthenticated,
+        ProfileOwnPermission,
+    )
+
+    def get_object(self):
+        user = self.request.user
+        return get_object_or_404(Profile, user=user)
+
+    def retrieve(self, request, *args, **kwargs):
+        if state := request.headers["Rtype"]:
+            resp = self.get_object().read_status.filter(bookreadingstatus__choices=state)
+            data = RanobeSerializer(resp, many=True).data
+            return Response({"ranobes": data}, status=status.HTTP_200_OK)
+        else:
+            return Response({'ranobes': False}, status.HTTP_200_OK)
 
 
 class ProfileView(generics.RetrieveAPIView, mixins.DestroyModelMixin, mixins.UpdateModelMixin):

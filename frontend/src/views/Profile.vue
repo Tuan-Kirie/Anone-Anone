@@ -64,8 +64,29 @@
                         <div class="content-selector" v-if="isActive.comments">
                             <div class="comments-container">
                                 <div class="comment" v-for="comment in comments" :key="comment.id">
-                                    <div class="comment-text">{{comment.text}}</div>
-                                    <div class="ranobe-shortcut">{{comments.ranobe_name}}</div>
+                                    <div class="comment-text-container">
+                                        <div class="comment-simple-menu">
+                                            <span>Текст комментария</span>
+                                        </div>
+                                        <div class="comment-text">{{comment.text}}</div>
+                                    </div>
+                                    <div class="ranobe-shortcut">
+                                        <div class="ranobe-shortcut image">
+                                            <img v-bind:src="comment.ranobe_image" alt="">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="content-selector" v-if="isActive.ranobe">
+                            <div class="ranobes-container">
+                                <div class="ranobe-filter">
+                                    <div><span>Запланировано</span></div>
+                                    <div><span>Читаю</span></div>
+                                    <div><span>Почитано</span></div>
+                                </div>
+                                <div class="ranobe-content-list">
+                                    <div class="ranobe-element"></div>
                                 </div>
                             </div>
                         </div>
@@ -154,7 +175,6 @@
                                     resp.data[b].image = 'http://127.0.0.1:8000' + resp.data[b].image;
                                     this.content.push(resp.data[b])
                                 }
-                                console.log(this.content)
                             }
                         }
                     ).catch(er => console.log(er))
@@ -171,8 +191,8 @@
                         resp => {
                             if (resp.data.comments.length > 0) {
                                 for (let j = 0; j !== resp.data.comments.length; j++) {
+                                    resp.data.comments[j].ranobe_image = 'http://127.0.0.1:8000' + resp.data.comments[j].ranobe_image;
                                     this.comments.push(resp.data.comments[j]);
-                                    console.log('F')
                                 }
                             } else {
                                 this.comments = []
@@ -199,6 +219,65 @@
 </script>
 
 <style scoped>
+    .ranobe-filter {
+        margin-top: 10px;
+        display: inline-flex;
+        width: 100%;
+        justify-content: space-around;
+
+    }
+    .ranobe-filter > div {
+        cursor: pointer;
+    }
+    .comment-simple-menu {
+        width: available;
+        max-lines: 1;
+        line-height: 20px;
+    }
+    .comment-simple-menu > span {
+        font-weight: bolder;
+    }
+    .comment {
+        margin-top: 10px;
+        overflow: hidden;
+        /*border-radius: 10px;*/
+        border: 1px solid #bfbfbf;
+        width: 90%;
+        height: 150px;
+        display: inline-flex;
+        justify-content: space-between;
+    }
+    .comment-text-container {
+        padding: 10px 5px 10px 15px;
+        width: available;
+        overflow: hidden;
+        height: auto;
+    }
+    .comment-text {
+        font-size: small;
+        padding: 5px;
+        border: 1px solid #bfbfbf;
+        border-radius: 4px;
+        margin-top: 10px;
+        max-height:80px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+
+    }
+    .ranobe-shortcut {
+        height: 100%;
+        max-width: 30%;
+    }
+    .ranobe-shortcut.image {
+        object-fit: cover;
+
+        max-width: 30%;
+        height: 150px;
+    }
+    .ranobe-shortcut.image > img {
+        width: auto;
+        height: 100%;
+    }
     .ranobe-info {
         margin-left: 10px;
         height: 100%;
@@ -240,9 +319,9 @@
         max-height: 100%;
         overflow: hidden;
         background: #eeeeee;
-        height: 1300px;
+        height: auto;
         display: grid;
-        /*DELETED header grid are, do not forget*/
+        /*DELETED header grid area, do not forget*/
         grid-template-areas: "prof-cont prof-cont";
         grid-template-rows: 0.3fr 1fr;
         grid-row-gap: 10px;

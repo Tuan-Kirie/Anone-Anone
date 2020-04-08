@@ -49,7 +49,6 @@ class CommentUpdateDestroySerializer(serializers.ModelSerializer):
 
 class ShortCommentSerializer(serializers.ModelSerializer):
     author_id = serializers.RelatedField(read_only=True, source='profile.id')
-    ranobe_name = serializers.CharField(source='ranobe.name', read_only=True)
 
     class Meta:
         model = Comments
@@ -58,5 +57,21 @@ class ShortCommentSerializer(serializers.ModelSerializer):
             'text',
             'ranobe_id',
             'author_id',
-            'ranobe_name'
+        ]
+
+
+class ProfileCommentSerializer(serializers.ModelSerializer):
+    author_id = serializers.RelatedField(read_only=True, source='profile.id')
+    ranobe_name = serializers.CharField(source='ranobe.name', read_only=True)
+    ranobe_image = serializers.ImageField(source='ranobe.image', read_only=True)
+
+    class Meta:
+        model = Comments
+        fields = [
+            'id',
+            'text',
+            'ranobe_id',
+            'author_id',
+            'ranobe_name',
+            'ranobe_image'
         ]

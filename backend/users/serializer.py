@@ -115,3 +115,12 @@ class ProfileBookmarkSerializer(serializers.Serializer):
     class Meta:
         model = Profile
         fields = "bookmarked"
+
+
+class BookreadingStatusProfileSerializer(serializers.Serializer):
+    # ranobe_id = serializers.RelatedField(read_only=True)
+
+    class Meta:
+        model = Profile
+        fields = "__all__"
+        # fields = ["id", "choices", "ranobe_id"]
