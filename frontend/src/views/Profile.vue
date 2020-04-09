@@ -39,26 +39,24 @@
                             Комментарии
                         </div>
                         <div v-bind:class="{active: isActive.ranobe}"
-                             @click="isActive.ranobe = true; isActive.bookmarks=false; isActive.comments=false">
+                             @click="getProfileMarkedRanobes">
                             Список ранобэ
                         </div>
                     </div>
-                    <!--                    <h3>Информация</h3>-->
-                    <!--                    <div><h4>Последние комментарии: </h4></div>-->
-                    <!--                    <div class="comments" v-for="comment in last_comments" :key="comment.id">-->
-                    <!--                        <a :href="comment.link"><span>{{comment.text}}</span></a>-->
-                    <!--                    </div>-->
                     <div class="content-wrapper">
                         <div class="content-selector" v-if="isActive.bookmarks">
                             <div class="content" v-for="data in content" :key="data.id">
-                                <div class="ranobe-container">
-                                    <div class="ranobe-img">
-                                        <img v-bind:src="data.image" alt="">
+                                <router-link class="ran-link"
+                                             :to="{ name: 'RanobeDetail', params: { ranobeId: data.id }}">
+                                    <div class="ranobe-container">
+                                        <div class="ranobe-img">
+                                            <img v-bind:src="data.image" alt="">
+                                        </div>
+                                        <div class="ranobe-info">
+                                            <div class="ranobe-name"><span>{{data.name}}</span></div>
+                                        </div>
                                     </div>
-                                    <div class="ranobe-info">
-                                        <div class="ranobe-name">{{data.name}}</div>
-                                    </div>
-                                </div>
+                                </router-link>
                             </div>
                         </div>
                         <div class="content-selector" v-if="isActive.comments">
@@ -71,9 +69,13 @@
                                         <div class="comment-text">{{comment.text}}</div>
                                     </div>
                                     <div class="ranobe-shortcut">
-                                        <div class="ranobe-shortcut image">
-                                            <img v-bind:src="comment.ranobe_image" alt="">
-                                        </div>
+                                        <router-link class="ran-link"
+                                                     :to="{ name: 'RanobeDetail', params: { ranobeId: comment.ranobe_id }}">
+                                            <div class="ranobe-shortcut image">
+                                                <!--TODO: SHADOW BOX-->
+                                                <img v-bind:src="comment.ranobe_image" alt="">
+                                            </div>
+                                        </router-link>
                                     </div>
                                 </div>
                             </div>
@@ -81,12 +83,33 @@
                         <div class="content-selector" v-if="isActive.ranobe">
                             <div class="ranobes-container">
                                 <div class="ranobe-filter">
-                                    <div><span>Запланировано</span></div>
-                                    <div><span>Читаю</span></div>
-                                    <div><span>Почитано</span></div>
+                                    <div v-bind:class="{active: isActive.all}"
+                                         @click="getMarkedRanobes(); contentActivator(0)">
+                                        <span>Все</span></div>
+                                    <div v-bind:class="{active: isActive.planned}"
+                                         @click="getMarkedRanobes('PL'); contentActivator(1)">
+                                        <span>Запланировано</span></div>
+                                    <div v-bind:class="{active: isActive.reading}"
+                                         @click="getMarkedRanobes('RDG'); contentActivator(2)">
+                                        <span>Читаю</span></div>
+                                    <div v-bind:class="{active: isActive.read}"
+                                         @click="getMarkedRanobes('RD'); contentActivator(3)"><span>Прочитано</span>
+                                    </div>
                                 </div>
                                 <div class="ranobe-content-list">
-                                    <div class="ranobe-element"></div>
+                                    <div class="content" v-for="data in content" :key="data.id">
+                                        <router-link class="ran-link"
+                                                     :to="{ name: 'RanobeDetail', params: { ranobeId: data.id }}">
+                                            <div class="ranobe-container">
+                                                <div class="ranobe-img">
+                                                    <img v-bind:src="data.image" alt="">
+                                                </div>
+                                                <div class="ranobe-info">
+                                                    <div class="ranobe-name"><span>{{data.name}}</span></div>
+                                                </div>
+                                            </div>
+                                        </router-link>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -123,6 +146,10 @@
                     bookmarks: false,
                     comments: false,
                     ranobe: false,
+                    all: false,
+                    planned: false,
+                    reading: false,
+                    read: false,
                 },
                 content: [],
             }
@@ -148,15 +175,6 @@
                         this.planned_books_amount = resp.data.planned_books_amount;
                         this.reading_books_amount = resp.data.reading_books_amount;
                         this.read_books_amount = resp.data.read_books_amount;
-                        //DEACTIVATED LAST COMMENTS VIEW
-                        // if (resp.data.last_comments.length === 1) {
-                        //     this.last_comments.push(resp.data.last_comments[0])
-                        // } else if (resp.data.last_comments.length > 1) {
-                        //     for (let i = 0; i < resp.data.last_comments.length; i++) {
-                        //         resp.data.last_comments[i].link = '?#/ranobe/' + resp.data.last_comments[i].ranobe_id + '/details';
-                        //         this.last_comments.push(resp.data.last_comments[i]);
-                        //     }
-                        // }
                     })
             },
             getProfileBookmarks() {
@@ -202,6 +220,32 @@
                     console.log(er)
                 })
             },
+            getProfileMarkedRanobes() {
+                this.isActive.bookmarks = false;
+                this.isActive.ranobe = true;
+                this.isActive.comments = false;
+                this.getMarkedRanobes();
+            },
+            getMarkedRanobes(filter) {
+                this.content = [];
+                let url = 'http://127.0.0.1:8000/user/profile/ranobes';
+                if (filter !== undefined) {
+                    url += `?Rtype=${filter}`;
+                } else if (this.isActive.read === true
+                    || this.isActive.planned === true
+                    || this.isActive.reading === true) {
+                    this.isActive.all = false
+                }
+                axios.get(url, {headers: {'Authorization': "JWT " + this.token}})
+                    .then(resp => {
+                        if (resp.data.ranobes.length > 0) {
+                            for (let j = 0; j !== resp.data.ranobes.length; j++) {
+                                resp.data.ranobes[j].image = 'http://127.0.0.1:8000' + resp.data.ranobes[j].image;
+                                this.content.push(resp.data.ranobes[j]);
+                            }
+                        }
+                    })
+            },
             normalizeRanobeName(name) {
                 //  If name contains char "/" return sliced name else return full name
                 if (name.indexOf('/') === -1) {
@@ -210,15 +254,30 @@
                     return name.substring(name.indexOf('/') + 1)
                 }
             },
+            contentActivator(type) {
+                this.isActive.all = (type === 0) ? true : false;
+                this.isActive.planned = (type === 1) ? true : false;
+                this.isActive.reading = (type === 2) ? true : false;
+                this.isActive.read = (type === 3) ? true : false;
+
+            },
         },
         mounted() {
             this.getProfileData();
             this.getProfileStatistics();
+            this.getProfileBookmarks();
         }
     }
 </script>
 
 <style scoped>
+    .ranobe-name > span {
+        color: black;
+    }
+    /*Delete router-link text decoration*/
+    a {
+        text-decoration: none;
+    }
     .ranobe-filter {
         margin-top: 10px;
         display: inline-flex;
@@ -227,7 +286,23 @@
 
     }
     .ranobe-filter > div {
+        width: 150px;
+        line-height: 30px;
+        height: 30px;
+        border-radius: 4px;
         cursor: pointer;
+        /*background-color: #e5e5e5;*/
+        text-align: center;
+        border: 1px solid #e5e5e5;
+    }
+    .ranobe-filter > div.active {
+        box-shadow: 0 1px 1px 1px rgba(0, 0, 0, .1), 0 0 1px 1px #3c82e6;
+
+    }
+    .ranobe-filter > div:hover {
+        /*-webkit-box-shadow: 1px 0px 8px 0px rgba(0,0,0,0.75);*/
+        /*-moz-box-shadow: 1px 0px 8px 0px rgba(0,0,0,0.75);*/
+        /*box-shadow: 1px 0px 8px 0px rgba(0,0,0,0.75);*/
     }
     .comment-simple-menu {
         width: available;
@@ -259,7 +334,7 @@
         border: 1px solid #bfbfbf;
         border-radius: 4px;
         margin-top: 10px;
-        max-height:80px;
+        max-height: 80px;
         overflow: hidden;
         text-overflow: ellipsis;
 
@@ -294,7 +369,7 @@
         max-height: 150px;
     }
     .content {
-        margin-top: 10px;
+        margin-top: 20px;
         padding: 0 20px 6px 0;
         width: 90%;
         display: flex;
