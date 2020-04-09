@@ -17,6 +17,8 @@ from django.shortcuts import get_object_or_404
 from comments.models import Comments
 
 
+# TODO: PAGINATION TO PROFILE STATISTIC INF
+
 class MainProfileView(ListCreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
@@ -89,12 +91,18 @@ class ProfileRanobesView(generics.RetrieveAPIView):
         return get_object_or_404(Profile, user=user)
 
     def retrieve(self, request, *args, **kwargs):
-        if state := request.headers["Rtype"]:
-            resp = self.get_object().read_status.filter(bookreadingstatus__choices=state)
-            data = RanobeSerializer(resp, many=True).data
-            return Response({"ranobes": data}, status=status.HTTP_200_OK)
-        else:
-            return Response({'ranobes': False}, status.HTTP_200_OK)
+        # Need try for prevent key error
+        try:
+            if state := request.GET["Rtype"]:
+                resp = self.get_object().read_status.filter(bookreadingstatus__choices=state)
+                data = RanobeSerializer(resp, many=True).data
+                return Response({"ranobes": data}, status=status.HTTP_200_OK)
+            else:
+                return Response({'ranobes': RanobeSerializer(self.get_object().read_status.all(), many=True).data},
+                                status.HTTP_200_OK)
+        except KeyError:
+            return Response({'ranobes': RanobeSerializer(self.get_object().read_status.all(), many=True).data},
+                            status.HTTP_200_OK)
 
 
 class ProfileView(generics.RetrieveAPIView, mixins.DestroyModelMixin, mixins.UpdateModelMixin):
@@ -223,7 +231,6 @@ class BookStatusUpdateView(generics.RetrieveUpdateDestroyAPIView):
             obj = filter_exist.update(profile_id=profile,
                                       ranobe_id=kwargs['pk'],
                                       choices=request.data['choice'])
-            print(obj)
             return Response({"result": True}, status=status.HTTP_202_ACCEPTED)
         elif len(filter_exist) > 1:
             filter_exist.delete()
