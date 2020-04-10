@@ -398,7 +398,6 @@
         background: #eeeeee;
         height: auto;
         display: grid;
-        /*DELETED header grid area, do not forget*/
         grid-template-areas: "prof-cont prof-cont";
         grid-template-rows: 0.3fr 1fr;
         grid-row-gap: 10px;
@@ -413,13 +412,6 @@
         width: 100%;
         height: auto;
     }
-    /*REMOVE HEADER WITH BG*/
-    /*.profile-header {*/
-    /*    grid-area: header;*/
-    /*    min-height: 200px;*/
-    /*    background: url('http://127.0.0.1:8080/profile.svg') no-repeat;*/
-    /*    background-size: cover;*/
-    /*}*/
     .info-container {
         grid-area: prof-cont;
     }
