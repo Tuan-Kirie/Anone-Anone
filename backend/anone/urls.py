@@ -13,7 +13,7 @@ from django.contrib.staticfiles.storage import staticfiles_storage
 from comments.views import CommentView, CommentCreateView, UpdateDestroyCommentView
 
 from ranobe.views import TagsView, GenresView
-
+from blog.views import BlogListView
 
 urlpatterns = [
     url(r'^favicon\.ico$', RedirectView.as_view(url=staticfiles_storage.url('favicon.ico'), permanent=True)),
@@ -39,5 +39,6 @@ urlpatterns = [
     path('user/short/', ShortUserView.as_view()),
     path('tags/list/', TagsView.as_view()),
     path('genres/list/', GenresView.as_view()),
+    path('blog/', BlogListView.as_view())
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

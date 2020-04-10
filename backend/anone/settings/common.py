@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'ranobe',
     'users',
     'comments',
+    'blog',
     'django_filters',
 
 ]
