@@ -17,7 +17,6 @@ from django.shortcuts import get_object_or_404
 from comments.models import Comments
 
 
-# TODO: PAGINATION TO PROFILE STATISTIC INF
 
 class MainProfileView(ListCreateAPIView):
     queryset = User.objects.all()
