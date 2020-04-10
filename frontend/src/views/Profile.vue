@@ -225,6 +225,8 @@
                 this.isActive.ranobe = true;
                 this.isActive.comments = false;
                 this.getMarkedRanobes();
+                this.isActive.all = true;
+
             },
             getMarkedRanobes(filter) {
                 this.content = [];
