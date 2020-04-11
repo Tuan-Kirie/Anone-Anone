@@ -5,6 +5,7 @@ import Ranobe from "../views/Ranobe";
 import RanobeDetail from "../views/RanobeDetail";
 import RanobeRead from "../views/RanobeRead";
 import Profile from "../views/Profile";
+import BlogDetail from "../views/BlogDetail";
 Vue.use(VueRouter);
 
 const routes = [
@@ -12,6 +13,12 @@ const routes = [
     path: '/',
     name: 'Home',
     component: Home
+  },
+  {
+    path: '/blog/:postId/details',
+    name: 'BlogDetail',
+    component: BlogDetail,
+    props: true
   },
   {
     path: '/ranobe',

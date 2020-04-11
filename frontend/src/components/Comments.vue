@@ -23,16 +23,18 @@
                     </div>
                     <div class="comments-sub-info">
                         <div class="comment-author"><span>{{comment.user}}</span></div>
-                        <div class="comment-t">{{normalizeDate(comment.created_on)}}</div>
+                        <div class="comment-t">{{dateNormalize(comment.created_on)}}</div>
                     </div>
                 </div>
                 <div class="comment-text">
                     <div class="show-edit-menu" v-if="comment.user_id === user_id">
                         <span @click="moveToCommentContainer(comment.id)" v-show="comment.show_status !== true">Редактировать |</span>
                         <span @click="showDeleteMenu(index)" v-show="comment.show_status !== true">Удалить</span>
-                        <span v-if="comment.show_status !== false" >Удалить комментарии?</span>
-                        <span v-if="comment.show_status !== false" @click="deleteComment(comment.id)" style="margin-left: 14px;">ДА</span>
-                        <span v-if="comment.show_status !== false" @click="comment.show_status = false" style="margin-left: 14px;">Нет</span>
+                        <span v-if="comment.show_status !== false">Удалить комментарии?</span>
+                        <span v-if="comment.show_status !== false" @click="deleteComment(comment.id)"
+                              style="margin-left: 14px;">ДА</span>
+                        <span v-if="comment.show_status !== false" @click="comment.show_status = false"
+                              style="margin-left: 14px;">Нет</span>
                     </div>
                     {{comment.text}}
                 </div>
@@ -75,10 +77,6 @@
                             this.comments.push(resp.data[i]);
                         }
                     }).catch(er => console.log(er))
-            },
-            normalizeDate: function (created_on) {
-                let datenow = new Date(created_on);
-                return datenow
             },
             postComment() {
                 let url_create = this.url + 'post/';
@@ -138,7 +136,18 @@
                     ).catch(er => {
                     console.log(er)
                 })
-            }
+            },
+            dateNormalize(date) {
+                let normal = new Date(date);
+                const options = {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                    timezone: 'UTC',
+                };
+                return normal.toLocaleDateString("ru", options)
+            },
+
         },
         mounted() {
             this.getCommentsOfTitle();
@@ -218,5 +227,7 @@
         width: 100%;
         padding: 5px 20px 5px 0px;
         margin-bottom: 30px;
+        overflow: hidden;
+        overflow-wrap: break-word;
     }
 </style>

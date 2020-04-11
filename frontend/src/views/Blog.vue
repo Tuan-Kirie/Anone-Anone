@@ -12,7 +12,11 @@
                 </div>
                 <div class="text">{{post.text}}</div>
                 <div class="read-btn-container">
-                    <div class="read-btn">Подробнее</div>
+                    <router-link class="blog-link"
+                                 :to="{ name: 'BlogDetail', params: { postId: post.id }}">
+                        <div class="read-btn">Подробнее</div>
+                    </router-link>
+
                 </div>
             </div>
         </div>

@@ -10,6 +10,14 @@ class BlogListView(generics.ListAPIView):
     serializer_class = BlogSerializer
     queryset = Blog.objects.all()
     permission_classes = [permissions.BasePermission]
-    #
-    # def retrieve(self, request, *args, **kwargs):
-    #     return Response(self.serializer_class(Blog.objects.all(), many=True).data, status=status.HTTP_200_OK)
+
+
+class DetailBlogView(generics.RetrieveAPIView):
+    serializer_class = BlogSerializer
+    permission_classes = [permissions.BasePermission]
+    queryset = Blog.objects.all()
+
+    def get(self, request, *args, **kwargs):
+        post = self.queryset.get(id=kwargs['post_id'])
+        resp = self.serializer_class(post).data
+        return Response(resp, status=status.HTTP_200_OK)
