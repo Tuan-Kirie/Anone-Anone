@@ -7,7 +7,7 @@
             </div>
         </div>
         <div class="ranobe-slider-container">
-
+            <Slider></Slider>
         </div>
         <Blog></Blog>
     </div>
@@ -15,10 +15,10 @@
 
 <script>
     import Blog from "./Blog";
-
+    import Slider from "../components/Slider";
     export default {
         name: 'Home',
-        components: {Blog}
+        components: {Blog, Slider}
     }
 </script>
 
@@ -55,5 +55,12 @@
     .parallax > span {
         color: white;
         font-size: 88px;
+    }
+    .ranobe-slider-container {
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: 60px;
+        width: 100%;
+        height: auto;
     }
 </style>

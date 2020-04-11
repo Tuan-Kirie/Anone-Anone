@@ -162,7 +162,7 @@
     #nav {
         position: sticky;
         top: 0;
-        z-index: 1;
+        z-index: 666;
         background: #fff;
         border: none;
         width: 100%;
