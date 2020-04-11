@@ -221,6 +221,7 @@
                   }
               }
             },
+
         },
         mounted() {
             //reset scroll position cause window saving before page scroll pos

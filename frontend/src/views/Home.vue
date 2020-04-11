@@ -14,7 +14,7 @@
 </template>
 
 <script>
-    import Blog from "../components/Blog";
+    import Blog from "./Blog";
 
     export default {
         name: 'Home',
