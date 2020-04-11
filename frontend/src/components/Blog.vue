@@ -4,8 +4,11 @@
             <div class="post" v-for="post in posts" :key="post.id">
                 <div class="post-header">
                     <div class="name">{{post.name}}</div>
-                    <div class="author">{{post.author}}</div>
-                    <div class="date">{{post.published_date}}</div>
+                    <div class="meta-data">
+                        <div class="author">{{post.author_name}}</div>
+                        |
+                        <div class="date">{{normalizeDate(post.published_date)}}</div>
+                    </div>
                 </div>
                 <div class="text">{{post.text}}</div>
                 <div class="read-btn-container">
@@ -30,10 +33,20 @@
             getBlogPosts() {
                 axios.get('http://127.0.0.1:8000/blog')
                     .then(resp => {
-                        for (let j = 0; j !== resp.data.length; j++) {
-                            this.posts.push(resp.data[j])
-                        }
-                    })
+                        this.posts = resp.data
+                    }).catch(er => {
+                    console.log(er)
+                })
+            },
+            normalizeDate(date) {
+                let normal = new Date(date);
+                const options = {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                    timezone: 'UTC',
+                };
+                return normal.toLocaleDateString("ru", options)
             }
         },
         mounted() {
@@ -43,6 +56,16 @@
 </script>
 
 <style scoped>
+    .text {
+        padding-top: 20px;
+    }
+    .meta-data {
+        display: inline-flex;
+    }
+    .name {
+        font-weight: bold;
+        font-size: larger;
+    }
     .read-btn-container {
         width: 100%;
     }
@@ -56,7 +79,7 @@
         text-decoration: none;
         display: inline-block;
         font-size: 16px;
-        margin: 10px 2px 0 0 ;
+        margin: 10px 2px 0 0;
         cursor: pointer;
         -webkit-transition-duration: 0.4s;
         transition-duration: 0.4s;
@@ -76,6 +99,7 @@
     .post-header {
         width: 100%;
         display: inline-flex;
+        justify-content: space-between;
     }
     .blog-wrapper {
         width: 100%;
