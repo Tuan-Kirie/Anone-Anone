@@ -118,9 +118,15 @@ class ProfileBookmarkSerializer(serializers.Serializer):
 
 
 class BookreadingStatusProfileSerializer(serializers.Serializer):
-    # ranobe_id = serializers.RelatedField(read_only=True)
-
     class Meta:
         model = Profile
         fields = "__all__"
-        # fields = ["id", "choices", "ranobe_id"]
+
+
+class AnotherProfileSerializer(serializers.ModelSerializer):
+    born = serializers.ReadOnlyField(source='profile.birth_date', read_only=True)
+    img = serializers.ImageField(source='profile.profile_img', read_only=True)
+
+    class Meta:
+        model = User
+        fields = ['id', 'username', 'email', 'born', 'img']

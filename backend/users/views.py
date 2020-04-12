@@ -11,11 +11,10 @@ from ranobe.serializer import RanobeSerializer
 from .permission import ProfileOwnPermission
 from .serializer import UserSerializer, ProfileSerializer, ShortUserSerializer, BookmarkSerializer, \
     UpdateBookmarkSerializer, ProfileBookmarkSerializer, BookStatusSerializer, BookReadingStatusSerializer, \
-    UpdateBookReadingStatusSerializer, BookreadingStatusProfileSerializer
+    UpdateBookReadingStatusSerializer, BookreadingStatusProfileSerializer, AnotherProfileSerializer
 from .models import Profile, BookReadingStatus
 from django.shortcuts import get_object_or_404
 from comments.models import Comments
-
 
 
 class MainProfileView(ListCreateAPIView):
@@ -251,3 +250,15 @@ class BookStatusUpdateView(generics.RetrieveUpdateDestroyAPIView):
             return Response({"result": True}, status=status.HTTP_202_ACCEPTED)
         else:
             return Response({"result": False}, status=status.HTTP_204_NO_CONTENT)
+
+
+class AnotherUserView(generics.RetrieveAPIView):
+    permission_classes = (
+        permissions.BasePermission,
+    )
+    serializer_class = AnotherProfileSerializer
+
+    def retrieve(self, request, *args, **kwargs):
+        obj = get_object_or_404(User, id=kwargs['user_id'])
+        resp = self.serializer_class(obj, many=False, read_only=True)
+        return Response({'user': resp.data}, status=status.HTTP_200_OK)

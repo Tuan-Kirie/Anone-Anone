@@ -22,7 +22,10 @@
                         <img v-bind:src="comment.user_img" alt="">
                     </div>
                     <div class="comments-sub-info">
-                        <div class="comment-author"><span>{{comment.user}}</span></div>
+                        <div class="comment-author"><span>
+                            {{comment.user_id}}
+                           <router-link :to="{ name: 'EnemyProfile', params: { userID: comment.user_id}}">{{comment.user}}</router-link>
+                        </span></div>
                         <div class="comment-t">{{dateNormalize(comment.created_on)}}</div>
                     </div>
                 </div>
@@ -151,7 +154,9 @@
         },
         mounted() {
             this.getCommentsOfTitle();
-            this.$store.dispatch('getShortData', localStorage.getItem('token'))
+            if (this.$store.state.token !== null) {
+                this.$store.dispatch('getShortData', localStorage.getItem('token'))
+            }
 
         }
     }
