@@ -6,6 +6,7 @@ import RanobeDetail from "../views/RanobeDetail";
 import RanobeRead from "../views/RanobeRead";
 import Profile from "../views/Profile";
 import BlogDetail from "../views/BlogDetail";
+import EnemyProfile from "../views/ProfileEnemy";
 Vue.use(VueRouter);
 
 const routes = [
@@ -41,6 +42,13 @@ const routes = [
     path: '/profile',
     name: 'Profile',
     component: Profile
+  },
+  {
+    //link to another users profiles
+    path: '/:userID/profile',
+    name: 'EnemyProfile',
+    component: EnemyProfile,
+    props: true
   },
   {
     path: '/about',

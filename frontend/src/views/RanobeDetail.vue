@@ -226,11 +226,14 @@
         mounted() {
             //reset scroll position cause window saving before page scroll pos
             window.scrollTo(0,0);
-
+            if (this.$store.state.token !== null)
+            {
+                this.checkBookmark();
+                this.getBookState();
+            }
             this.getData();
             window.addEventListener('scroll', this.lazyloadComments);
-            this.checkBookmark();
-            this.getBookState();
+
         }
     }
 </script>
