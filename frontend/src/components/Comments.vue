@@ -23,7 +23,6 @@
                     </div>
                     <div class="comments-sub-info">
                         <div class="comment-author"><span>
-                            {{comment.user_id}}
                            <router-link :to="{ name: 'EnemyProfile', params: { userID: comment.user_id}}">{{comment.user}}</router-link>
                         </span></div>
                         <div class="comment-t">{{dateNormalize(comment.created_on)}}</div>
@@ -163,6 +162,9 @@
 </script>
 
 <style scoped>
+    a {
+        text-decoration: none;
+    }
     .show-edit-menu > span {
         font-size: 13px;
     }
@@ -209,11 +211,14 @@
         margin-left: 15px;
         margin-top: 15px;
     }
-    .comment-author > span {
+    .comment-author > span > a {
         font-size: 1em;
         color: rgba(0, 0, 0, .87);
 
         font-weight: 700;
+    }
+    .comment-author > span > a:hover {
+        text-shadow: 1px 0 #b7b7b7;
     }
     .comment-author-img {
         width: 50px;

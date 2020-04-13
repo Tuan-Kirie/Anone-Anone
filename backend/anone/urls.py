@@ -7,7 +7,7 @@ from rest_framework_jwt.views import verify_jwt_token
 from ranobe.views import RanobeList, RanobeDetailView, ChapterPageView, DetailChapterPage
 from users.views import MainProfileView, CreateUserView, ProfileView, ShortUserView, BookmarkUpdateView, \
     BookmarkCheckView, BookStatusUpdateView, ProfileStatisticView, ProfileCommentsView, ProfileRanobesView, \
-    AnotherUserView
+    AnotherUserView, AnotherUserMarkedRanobesView
 from django.conf.urls.static import static
 from django.conf import settings
 from django.contrib.staticfiles.storage import staticfiles_storage
@@ -43,5 +43,7 @@ urlpatterns = [
     path('blog/', BlogListView.as_view()),
     url(r'^blog/(?P<post_id>[0-9]+)/$', DetailBlogView.as_view()),
     url(r'^another/user/(?P<user_id>[0-9]+)/$', AnotherUserView.as_view()),
+    url(r'^another/user/(?P<user_id>[0-9]+)/ranobes/$', AnotherUserMarkedRanobesView.as_view()),
+
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

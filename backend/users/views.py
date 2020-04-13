@@ -224,7 +224,6 @@ class BookStatusUpdateView(generics.RetrieveUpdateDestroyAPIView):
                                     choices=request.data['choice'])
             obj.save()
             return Response({"result": True}, status=status.HTTP_202_ACCEPTED)
-        # Additional check for double existing (may be cause not nice related model)
         elif len(filter_exist) == 1:
             obj = filter_exist.update(profile_id=profile,
                                       ranobe_id=kwargs['pk'],
@@ -260,5 +259,16 @@ class AnotherUserView(generics.RetrieveAPIView):
 
     def retrieve(self, request, *args, **kwargs):
         obj = get_object_or_404(User, id=kwargs['user_id'])
-        resp = self.serializer_class(obj, many=False, read_only=True)
-        return Response({'user': resp.data}, status=status.HTTP_200_OK)
+        user_data = self.serializer_class(obj, many=False, read_only=True)
+
+        return Response({'user': user_data.data}, status=status.HTTP_200_OK)
+
+
+class AnotherUserMarkedRanobesView(ProfileRanobesView):
+    permission_classes = (
+        permissions.BasePermission,
+    )
+
+    def get_object(self):
+        obj = get_object_or_404(Profile, user__id=self.kwargs['user_id'])
+        return obj
