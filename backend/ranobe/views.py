@@ -60,16 +60,6 @@ class ChapterPageView(ListAPIView):
         return Chapters.objects.filter(ranobe_id=self.kwargs['pk'])
 
 
-# class DetailChapterPage(GenericAPIView):
-#     lookup_field = 'id'
-#     queryset = Chapters.objects.all()
-#     serializer_class = ChapterSerializer
-#     permission_classes = [permissions.BasePermission]
-#
-#     def get(self, request, chapter_id, format=None):
-#         snippet = self.queryset.get(id=chapter_id)
-#         serializer = self.serializer_class(snippet)
-#         return Response(serializer.data)
 class DetailChapterPage(generics.RetrieveAPIView):
     serializer_class = DetailChapterSerializer
     # queryset = Chapters.objects.all()
