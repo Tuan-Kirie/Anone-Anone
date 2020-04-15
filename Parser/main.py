@@ -2,14 +2,16 @@ from classes import SearchPage, Database, TitlePage, ChapterPage, ImageParse
 import time
 from colorama import Fore
 
+print("Starting.")
 """
 Consts
 """
 database = Database()
-
+print("Database activated")
 url = 'https://tl.rulate.ru/search/?cat=2'
 
 while True:
+    print("Started main loop")
     """
     Main loop for search page parse
     """
