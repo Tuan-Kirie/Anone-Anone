@@ -19,6 +19,9 @@ class UserSerializer(serializers.ModelSerializer):
             validated_data['email'],
             validated_data['password']
         )
+        Profile.objects.create(
+            user=user
+        )
         return user
 
     class Meta:

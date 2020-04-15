@@ -6,7 +6,7 @@ from ranobe.models import Chapters, Ranobe
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     birth_date = models.DateField(null=True, blank=True)
-    profile_img = models.ImageField(upload_to='media/profile', default='media/profile/default.png', null=True,
+    profile_img = models.ImageField(upload_to='media/profile', default='media/profile/default.jpg', null=True,
                                     blank=True)
     reading_books = models.ManyToManyField(Chapters, related_name='reading')
     read_books = models.ManyToManyField(Ranobe, related_name='read')
