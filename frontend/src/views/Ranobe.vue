@@ -14,7 +14,7 @@
             </div>
             <transition name="ranobe-trans">
                 <div class="content">
-                    <div class="ranobe-container" v-for="ranobe in ranobes" :key="ranobe.id">
+                    <div class="ranobe-container" v-for="(ranobe, index) in ranobes" :key="`item-${index}`">
                         <div class="ranobe-image-cont">
                             <router-link class="ran-link"
                                          :to="{ name: 'RanobeDetail', params: { ranobeId: ranobe.id }}">
@@ -31,7 +31,7 @@
                 </div>
             </transition>
         </div>
-        <Menu @update="sync" @clear="getFirst"></Menu>
+        <Menu @update="sync" @clear="getFirst" v-bind:_filter="{tag: choosed_tag, genre: choosed_genre}"></Menu>
     </div>
 </template>
 <style scoped>
@@ -178,6 +178,7 @@
     export default {
         name: "Ranobe",
         components: {Menu},
+        props: ['choosedTag', 'choosedGenre'],
         data() {
             return {
                 ranobes: [],
@@ -185,10 +186,13 @@
                 search_text: '',
                 last_window_position: null,
                 search_active: false,
+                choosed_tag: this.choosedTag,
+                choosed_genre: this.choosedGenre,
             }
         },
         methods: {
             getFirst() {
+                if (this.search_active !== true) {
                 axios.get('http://127.0.0.1:8000/ranobe/')
                     .then(resp => {
                         this.next_page_link = resp.data.next;
@@ -196,8 +200,7 @@
                             this.ranobes.push(resp.data.results[i])
                         }
                     }).catch(er => console.log(er));
-
-            },
+            }},
             search() {
                 this.ranobes = [];
                 let search_url = 'http://127.0.0.1:8000/ranobe/?search=' + this.search_text;
@@ -207,7 +210,6 @@
                             this.ranobes.push(resp.data.results[i])
                         }
                         this.search_active = this.search_text.length > 0;
-                        console.log(this.search_active)
                     }).catch(er => console.log(er));
             },
             getNext_page() {
@@ -234,6 +236,7 @@
             },
             sync: function (args) {
                 this.ranobes = args
+                this.search_active = true
             },
             goTop() {
                 if (this.last_window_position === null) {
@@ -262,9 +265,16 @@
         },
 
         mounted() {
-            this.getFirst();
-            this.lazyloadcontent()
-        },
+            if (this.choosedFilter !== undefined || this.choosedTag !== undefined) {
+                /**/
+
+            } else {
+                this.getFirst();
+                this.lazyloadcontent()
+            }
+            },
+        created() {
+            },
         destroyed() {
             window.removeEventListener('scroll', this.getNext_page)
         }
