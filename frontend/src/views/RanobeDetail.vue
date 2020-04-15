@@ -134,6 +134,9 @@
                 }
             },
             addToBookmark() {
+                if (this.$store.state.token === null) {
+                    return alert("Войдите в систему, чтобы добавить ранобэ в список закладок")
+                }
                 let data = new FormData();
                 let bookmark_url = 'http://127.0.0.1:8000/ranobe/' + this.ranobeId + '/bookmark/';
                 axios.put(bookmark_url, data, {headers: {'Authorization': "JWT " + this.$store.state.token}})
@@ -177,6 +180,9 @@
                 el_show.style.display = 'none';
             },
             addBoodkState(state) {
+                if (this.$store.state.token === null) {
+                    return alert("Войдите в систему, чтобы добавить ранобэ в свой список")
+                }
                 let data = new FormData();
                 data.append('choice', state);
                 let url = 'http://127.0.0.1:8000/ranobe/' + this.ranobe_id + '/readstatus/';

@@ -18,14 +18,12 @@
                         <div class="ranobe-image-cont">
                             <router-link class="ran-link"
                                          :to="{ name: 'RanobeDetail', params: { ranobeId: ranobe.id }}">
-                                <img class="ranobe-img" v-bind:src="ranobe.image" alt=""
-                                     v-if="ranobe.adult_status === false">
-                                <img class="ranobe-img-adult" v-bind:src="ranobe.image" alt="" v-else>
+                                    <img class="ranobe-img" v-bind:src="ranobe.image" alt=""
+                                         v-if="ranobe.adult_status === false">
+                                    <img class="ranobe-img-adult" v-bind:src="ranobe.image" alt="" v-else>
                             </router-link>
                             <div class="ranobe-header">
-                                <span class="ranobe-name">{{normalizeRanobeName(ranobe.name)}}</span>
-                                <span class="ranobe-alternate-n"
-                                      v-if="ranobe.alternate_name">{{ranobe.alternate_name}}</span>
+                                <span class="ranobe-name">{{normalizeRanobeName(ranobe.name)}}</span><span class="ranobe-alternate-n" v-if="ranobe.alternate_name">{{ranobe.alternate_name}}</span>
                                 <span class="ranobe-alternate-n" v-else> </span>
                             </div>
                         </div>
@@ -44,6 +42,7 @@
         width: 0;
         top: 60px;
     }
+
     .sticky-go-top {
         transition: all ease .5s;
         position: fixed;
@@ -70,6 +69,7 @@
         display: flex;
         flex-direction: row;
     }
+
     .content-hover-container {
         width: 80%;
     }
@@ -184,6 +184,7 @@
                 next_page_link: null,
                 search_text: '',
                 last_window_position: null,
+                search_active: false,
             }
         },
         methods: {
@@ -205,21 +206,25 @@
                         for (let i = 0; i < resp.data.results.length; i++) {
                             this.ranobes.push(resp.data.results[i])
                         }
+                        this.search_active = this.search_text.length > 0;
+                        console.log(this.search_active)
                     }).catch(er => console.log(er));
             },
             getNext_page() {
-                if (this.search_text.length === 0) {
-                    if (this.next_page_link !== null) {
-                        let pos1 = document.documentElement.offsetHeight;
-                        let pos2 = document.documentElement.scrollTop + window.innerHeight;
-                        if (pos1 === Math.floor(pos2)) {
-                            axios.get(this.next_page_link)
-                                .then(resp => {
-                                    this.next_page_link = resp.data.next;
-                                    for (let i = 0; i < resp.data.results.length; i++) {
-                                        this.ranobes.push(resp.data.results[i])
-                                    }
-                                }).catch(er => console.log(er))
+                if (this.search_active !== true) {
+                    if (this.search_text.length === 0) {
+                        if (this.next_page_link !== null) {
+                            let pos1 = document.documentElement.offsetHeight;
+                            let pos2 = document.documentElement.scrollTop + window.innerHeight;
+                            if (pos1 === Math.floor(pos2)) {
+                                axios.get(this.next_page_link)
+                                    .then(resp => {
+                                        this.next_page_link = resp.data.next;
+                                        for (let i = 0; i < resp.data.results.length; i++) {
+                                            this.ranobes.push(resp.data.results[i])
+                                        }
+                                    }).catch(er => console.log(er))
+                            }
                         }
                     }
                 }
