@@ -34,7 +34,9 @@
                 </div>
                 <div class="ranobe-genres" v-if="showCheck(genres)">
                     <h3>Жанры:</h3>
-                    <span v-for="genre in this.genres" :key="genre"><a href="#">{{genre}}</a></span>
+                    <span v-for="genre in this.genres" :key="genre.id">
+                        <router-link :to="{name: 'Ranobe', params: {'choosedGenre': {name: genre.name, id: genre.id} }}"> {{genre.name}}</router-link>
+                    </span>
                 </div>
                 <div class="ranobe-description" v-if="showCheck(ranobe_description)">
                     <h3>Описание:</h3>
@@ -58,7 +60,11 @@
                 <div v-if="tags.length > 4">
                     <div class="tags-column" id="show-tags">
                         <h3>Теги</h3>
-                        <span v-for="tag in this.tags" :key="tag"><a href="#">{{tag}}</a></span>
+                        <span v-for="tag in this.tags" :key="tag.id">
+                            <router-link :to="{name: 'Ranobe', params: {'choosedTag': {name: tag.name, id: tag.id} }}">
+                                {{tag.name}}
+                            </router-link>
+                        </span>
                     </div>
                     <div class="show-tags" @click="show_full_tags" id="show-tags-b">
                         Показать полностью
@@ -67,7 +73,10 @@
                 <div v-else>
                     <div class="tags-column" style="height: auto">
                         <h3>Теги</h3>
-                        <span v-for="tag in this.tags" :key="tag"><a href="#">{{tag}}</a></span>
+                        <span v-for="tag in this.tags" :key="tag.id">
+                            <router-link :to="{name: 'Ranobe', params: {'choosedTag': {name: tag.name, id: tag.id} }}">{{tag.name}}
+                            </router-link>
+                        </span>
                     </div>
                 </div>
             </div>
@@ -111,16 +120,21 @@
                         this.ranobe_name = resp.data.name;
                         this.ranobe_description = resp.data.description;
                         this.publisher_name = resp.data.publisher_name;
-                        if (resp.data.genres_name != null) {
-                            for (let i = 0; i !== resp.data.genres_name.length; i++) {
-                                this.genres.push(resp.data.genres_name[i]);
-                            }
-                        } else if (resp.data.tags_name != null) {
-                            for (let j = 0; j !== resp.data.tags_name.length; j++) {
-                                this.tags.push(resp.data.tags_name[j]);
+                        if (resp.data.tags && resp.data.tags.length > 0) {
+                            for (let i = 0; i < resp.data.tags.length; i ++)
+                                this.tags.push({
+                                    'id': resp.data.tags[i],
+                                    'name': resp.data.tags_name[i]
+                                })
+                        }
+                        if (resp.data.genres && resp.data.genres.length > 0 ) {
+                            for (let j = 0; j < resp.data.genres.length; j ++) {
+                                this.genres.push({
+                                    'id': resp.data.genres[j],
+                                    'name': resp.data.genres_name[j]
+                                })
                             }
                         }
-                        this.tags = resp.data.tags_name;
                         this.image += ('http://127.0.0.1:8000' + resp.data.image);
                         this.alternate_name = resp.data.alternate_name;
                         this.adult_status = resp.data.adult_status;

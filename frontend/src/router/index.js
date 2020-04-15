@@ -24,7 +24,8 @@ const routes = [
   {
     path: '/ranobe',
     name: 'Ranobe',
-    component: Ranobe
+    component: Ranobe,
+    props: true
   },
   {
     path: '/ranobe/:ranobeId/details',

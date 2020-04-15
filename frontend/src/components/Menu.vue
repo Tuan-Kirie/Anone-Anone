@@ -243,6 +243,7 @@
 
     export default {
         name: "Menu",
+        props: ['_filter'],
         data: function () {
             return {
                 genres_show: false,
@@ -356,9 +357,9 @@
                 let ranobes = [];
                 let filter = '';
                 if (this.adult === null) {
-                    this.filter = '';
+                    filter = '';
                 } else {
-                    this.filter = '' + '&adult=' + this.adult;
+                    filter = '' + '&adult=' + this.adult;
                 }
                 // Урл обратабывает нормально, если на 1 элем оставить &
                 if (this.choosed_tags.length > 1) {
@@ -369,6 +370,7 @@
                     filter += '&tags=' + this.choosed_tags[0]
                 }
                 if (this.choosed_genres.length > 1) {
+
                     for (let x = 0; x < this.choosed_genres.length; x++) {
                         filter += '&genres=' + this.choosed_genres[x]
                     }
@@ -385,6 +387,18 @@
                 this.$emit('update', ranobes)
             },
         },
+        mounted() {
+            if (this._filter.tag !== undefined) {
+                this.choosed_tags.push(this._filter.tag.id);
+                this.choosed_tags_meta.push(this._filter.tag.name);
+                this.searchRanobe();
+            }
+            if (this._filter.genre !== undefined) {
+                this.choosed_genres.push(this._filter.genre.id);
+                this.choosed_genres_meta.push(this._filter.genre.name);
+                this.searchRanobe();
+            }
+        }
 
 
     }
