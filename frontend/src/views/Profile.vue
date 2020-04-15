@@ -45,39 +45,49 @@
                     </div>
                     <div class="content-wrapper">
                         <div class="content-selector" v-if="isActive.bookmarks">
-                            <div class="content" v-for="data in content" :key="data.id">
-                                <router-link class="ran-link"
-                                             :to="{ name: 'RanobeDetail', params: { ranobeId: data.id }}">
-                                    <div class="ranobe-container">
-                                        <div class="ranobe-img">
-                                            <img v-bind:src="data.image" alt="">
+                            <div v-if="content[0] !== 'Нет записей'">
+                                <div class="content" v-for="data in content" :key="data.id">
+                                    <router-link class="ran-link"
+                                                 :to="{ name: 'RanobeDetail', params: { ranobeId: data.id }}">
+                                        <div class="ranobe-container">
+                                            <div class="ranobe-img">
+                                                <img v-bind:src="data.image" alt="">
+                                            </div>
+                                            <div class="ranobe-info">
+                                                <div class="ranobe-name"><span>{{data.name}}</span></div>
+                                            </div>
                                         </div>
-                                        <div class="ranobe-info">
-                                            <div class="ranobe-name"><span>{{data.name}}</span></div>
-                                        </div>
-                                    </div>
-                                </router-link>
+                                    </router-link>
+                                </div>
+                            </div>
+                            <div v-else style="padding: 25px; font-weight: bolder">К сожалению у вас еще нет закладок
+                                ={
                             </div>
                         </div>
                         <div class="content-selector" v-if="isActive.comments">
-                            <div class="comments-container">
-                                <div class="comment" v-for="comment in comments" :key="comment.id">
-                                    <div class="comment-text-container">
-                                        <div class="comment-simple-menu">
-                                            <span>Текст комментария</span>
-                                        </div>
-                                        <div class="comment-text">{{comment.text}}</div>
-                                    </div>
-                                    <div class="ranobe-shortcut">
-                                        <router-link class="ran-link"
-                                                     :to="{ name: 'RanobeDetail', params: { ranobeId: comment.ranobe_id }}">
-                                            <div class="ranobe-shortcut image">
-                                                <!--TODO: SHADOW BOX-->
-                                                <img v-bind:src="comment.ranobe_image" alt="">
+                            <div v-if="comments.length > 0">
+                                <div class="comments-container">
+                                    <div class="comment" v-for="comment in comments" :key="comment.id">
+                                        <div class="comment-text-container">
+                                            <div class="comment-simple-menu">
+                                                <span>Текст комментария</span>
                                             </div>
-                                        </router-link>
+                                            <div class="comment-text">{{comment.text}}</div>
+                                        </div>
+                                        <div class="ranobe-shortcut">
+                                            <router-link class="ran-link"
+                                                         :to="{ name: 'RanobeDetail', params: { ranobeId: comment.ranobe_id }}">
+                                                <div class="ranobe-shortcut image">
+                                                    <!--TODO: SHADOW BOX-->
+                                                    <img v-bind:src="comment.ranobe_image" alt="">
+                                                </div>
+                                            </router-link>
+                                        </div>
                                     </div>
                                 </div>
+                            </div>
+                            <div v-else style="padding: 25px; font-weight: bolder">К сожалению вы еще ничего не
+                                прокомментировали ={
                             </div>
                         </div>
                         <div class="content-selector" v-if="isActive.ranobe">
@@ -97,19 +107,22 @@
                                     </div>
                                 </div>
                                 <div class="ranobe-content-list">
-                                    <div class="content" v-for="data in content" :key="data.id">
-                                        <router-link class="ran-link"
-                                                     :to="{ name: 'RanobeDetail', params: { ranobeId: data.id }}">
-                                            <div class="ranobe-container">
-                                                <div class="ranobe-img">
-                                                    <img v-bind:src="data.image" alt="">
+                                    <div v-if="content.length > 0">
+                                        <div class="content" v-for="data in content" :key="data.id">
+                                            <router-link class="ran-link"
+                                                         :to="{ name: 'RanobeDetail', params: { ranobeId: data.id }}">
+                                                <div class="ranobe-container">
+                                                    <div class="ranobe-img">
+                                                        <img v-bind:src="data.image" alt="">
+                                                    </div>
+                                                    <div class="ranobe-info">
+                                                        <div class="ranobe-name"><span>{{data.name}}</span></div>
+                                                    </div>
                                                 </div>
-                                                <div class="ranobe-info">
-                                                    <div class="ranobe-name"><span>{{data.name}}</span></div>
-                                                </div>
-                                            </div>
-                                        </router-link>
+                                            </router-link>
+                                        </div>
                                     </div>
+                                    <div v-else style="padding: 25px; font-weight: bolder">К сожалению тут пусто =(</div>
                                 </div>
                             </div>
                         </div>
@@ -276,10 +289,12 @@
     .ranobe-name > span {
         color: black;
     }
+
     /*Delete router-link text decoration*/
     a {
         text-decoration: none;
     }
+
     .ranobe-filter {
         margin-top: 10px;
         display: inline-flex;
@@ -287,6 +302,7 @@
         justify-content: space-around;
 
     }
+
     .ranobe-filter > div {
         width: 150px;
         line-height: 30px;
@@ -297,23 +313,28 @@
         text-align: center;
         border: 1px solid #e5e5e5;
     }
+
     .ranobe-filter > div.active {
         box-shadow: 0 1px 1px 1px rgba(0, 0, 0, .1), 0 0 1px 1px #3c82e6;
 
     }
+
     .ranobe-filter > div:hover {
         /*-webkit-box-shadow: 1px 0px 8px 0px rgba(0,0,0,0.75);*/
         /*-moz-box-shadow: 1px 0px 8px 0px rgba(0,0,0,0.75);*/
         /*box-shadow: 1px 0px 8px 0px rgba(0,0,0,0.75);*/
     }
+
     .comment-simple-menu {
         width: available;
         max-lines: 1;
         line-height: 20px;
     }
+
     .comment-simple-menu > span {
         font-weight: bolder;
     }
+
     .comment {
         margin-top: 10px;
         overflow: hidden;
@@ -324,12 +345,14 @@
         display: inline-flex;
         justify-content: space-between;
     }
+
     .comment-text-container {
         padding: 10px 5px 10px 15px;
         width: available;
         overflow: hidden;
         height: auto;
     }
+
     .comment-text {
         font-size: small;
         padding: 5px;
@@ -341,35 +364,42 @@
         text-overflow: ellipsis;
 
     }
+
     .ranobe-shortcut {
         height: 100%;
         max-width: 30%;
     }
+
     .ranobe-shortcut.image {
         object-fit: cover;
 
         max-width: 30%;
         height: 150px;
     }
+
     .ranobe-shortcut.image > img {
         width: auto;
         height: 100%;
     }
+
     .ranobe-info {
         margin-left: 10px;
         height: 100%;
     }
+
     .ranobe-img {
         object-fit: cover;
         border-radius: 5px;
         border: 1px solid #cecece;
     }
+
     .ranobe-img > img {
         display: block;
         height: auto;
         width: 110px;
         max-height: 150px;
     }
+
     .content {
         margin-top: 20px;
         padding: 0 20px 6px 0;
@@ -380,16 +410,19 @@
         border-bottom: 1px solid #e1e1e1;
         cursor: pointer;
     }
+
     .content:hover {
         -webkit-box-shadow: 4px 0 8px 8px rgba(214, 214, 214, 1);
         -moz-box-shadow: 4px 0 8px 8px rgba(214, 214, 214, 1);
         box-shadow: 4px 0 8px 8px rgba(214, 214, 214, 1);
     }
+
     .ranobe-container {
         width: 100%;
         height: auto;
         display: flex;
     }
+
     .profile-container {
         width: 100%;
         max-width: 100%;
@@ -403,23 +436,28 @@
         grid-row-gap: 10px;
         grid-column-gap: 22px;
     }
+
     .user-header {
         width: 100%;
         max-height: 450px;
         object-fit: cover;
     }
+
     .img-container > img {
         width: 100%;
         height: auto;
     }
+
     .info-container {
         grid-area: prof-cont;
     }
+
     .profile-shortcuts {
         margin-top: 40px;
         display: flex;
         justify-content: space-around;
     }
+
     .profile-statistic {
         width: 285px;
         background: #FFFFFF;
@@ -427,6 +465,7 @@
         border-radius: 2px;
         margin-bottom: 15px;
     }
+
     .block-name {
         overflow: hidden;
         height: 44px;
@@ -438,19 +477,23 @@
         padding: 0 10px 10px;
         border-bottom: solid 2px #40abe9;
     }
+
     .info-column {
         width: 285px;
         display: flex;
         flex-direction: column;
     }
+
     .block-info {
         padding: 10px;
         display: flex;
         flex-direction: column;
     }
+
     .block-info > * {
         margin-top: 3px;
     }
+
     .profile-info {
         background: #FFFFFF;
         padding: 20px;
@@ -458,23 +501,28 @@
         border-radius: 2px;
         width: 900px;
     }
+
     .profile-menu-list {
         width: 100%;
         height: 40px;
         border-bottom: 2px solid rgba(34, 36, 38, .15);
         display: flex;
     }
+
     .profile-menu-list > * {
         cursor: pointer;
         margin-right: 20px;
     }
+
     .profile-menu-list > div {
         height: 100%;
     }
+
     .profile-menu-list > .active {
         font-weight: bold;
         border-bottom: 2px solid #1b1c1d;
     }
+
     .profile-menu-list > div:hover {
         border-bottom: 2px solid #1b1c1d;
         color: rgba(0, 0, 0, .95);
