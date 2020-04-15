@@ -31,7 +31,7 @@
                 </div>
             </transition>
         </div>
-        <Menu @update="sync" @clear="getFirst" v-bind:_filter="{tag: choosed_tag, genre: choosed_genre}"></Menu>
+        <Menu @update="sync" @clear="getFirst" @disable="searchActiveDisable" v-bind:_filter="{tag: choosed_tag, genre: choosed_genre}"></Menu>
     </div>
 </template>
 <style scoped>
@@ -201,6 +201,7 @@
                         }
                     }).catch(er => console.log(er));
             }},
+            searchActiveDisable() {this.ranobes = []; this.search_active = false; this.getFirst()},
             search() {
                 this.ranobes = [];
                 let search_url = 'http://127.0.0.1:8000/ranobe/?search=' + this.search_text;

@@ -154,6 +154,7 @@
         border-radius: 5px;
         padding: 3px;
         background: #babbbc;
+        cursor: pointer;
     }
     .clear:hover {
         background: rgba(88, 88, 88, 0.8);
@@ -272,7 +273,8 @@
                 this.choosed_genres = [];
                 this.choosed_genres_meta = [];
                 this.choosed_tags_meta = [];
-                this.$emit('clear')
+                this.$emit('clear');
+                this.$emit('disable');
             },
             removeChoosedTags(tag_name) {
                 const tag_id = this.choosed_tags_meta.indexOf(tag_name);
