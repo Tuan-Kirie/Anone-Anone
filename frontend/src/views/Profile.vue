@@ -6,7 +6,22 @@
                     <div class="profile-statistic">
                         <div class="user-header">
                             <div class="img-container">
-                                <img v-bind:src='img' alt="">
+                                <a href="#openModal"> <img v-bind:src='img' alt=""></a>
+                                <div id="openModal" class="modal">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h3 class="modal-title">Загрузка изображения</h3>
+                                                <a href="#close" title="Close" class="close" id="close">×</a>
+                                            </div>
+                                            <div class="modal-body">
+                                                <p>Выберите изображение которое хотите загрузить...</p>
+                                                <input type="file" @change="processFile($event)">
+                                                <button class="button" @click="editProfileImage">Отправить</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div class="block-name">
@@ -14,7 +29,14 @@
                         </div>
                         <div class="block-info">
                             <span>Имя - {{name}}</span>
-                            <span>Дата рождения - {{birth}}</span>
+                            <span id="birth" title="Редактирвоать"
+                                  @click="toShow.birth_edit_button = !toShow.birth_edit_button">Дата рождения - {{birth}} </span>
+                            <transition name="button-shower">
+                                <div v-show="toShow.birth_edit_button"><input v-model="birth_input" type="date"
+                                                                              min="1950-01-01">
+                                    <button @click="editBirthDate" class="button">Отправить</button>
+                                </div>
+                            </transition>
                             <span>Email - {{email}}</span>
                         </div>
                     </div>
@@ -122,7 +144,8 @@
                                             </router-link>
                                         </div>
                                     </div>
-                                    <div v-else style="padding: 25px; font-weight: bolder">К сожалению тут пусто =(</div>
+                                    <div v-else style="padding: 25px; font-weight: bolder">К сожалению тут пусто =(
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -165,9 +188,55 @@
                     read: false,
                 },
                 content: [],
+                toShow: {
+                    birth_edit_button: false,
+                },
+                birth_input: '',
+                new_image: null,
             }
         },
         methods: {
+            processFile(event) {
+                this.new_image = event.target.files[0]
+            },
+            editProfileImage() {
+                if (this.new_image !== null) {
+                    let send_data = new FormData();
+                    send_data.append('profile_img', this.new_image);
+                    axios.patch('http://127.0.0.1:8000/user/profile/update', send_data, {headers: {'Authorization': "JWT " + this.token}})
+                        .then(
+                            resp => {
+                                if (resp.status === 200) {
+                                    this.toShow.birth_edit_button = false;
+                                    document.getElementById('close').click()
+                                    alert("Успешно")
+                                } else {
+                                    alert("Произошла ошибка")
+                                }
+                            }
+                        ).catch(er => console.log(er))
+
+                }
+            },
+            editBirthDate() {
+                if (this.birth_input === '') {
+                    alert('Введите корректную дату')
+                } else {
+                    let send_data = new FormData();
+                    send_data.append('birth_date', this.birth_input);
+                    axios.patch('http://127.0.0.1:8000/user/profile/update', send_data, {headers: {'Authorization': "JWT " + this.token}})
+                        .then(
+                            resp => {
+                                if (resp.status === 200) {
+                                    this.toShow.birth_edit_button = false;
+                                    alert("Успешно")
+                                } else {
+                                    alert("Произошла ошибка")
+                                }
+                            }
+                        ).catch(er => console.log(er))
+                }
+            },
             getProfileData() {
                 axios.get('http://127.0.0.1:8000/user/profile/', {headers: {'Authorization': "JWT " + this.token}})
                     .then(
@@ -276,7 +345,8 @@
                 this.isActive.read = (type === 3) ? true : false;
 
             },
-        },
+        }
+        ,
         mounted() {
             this.getProfileData();
             this.getProfileStatistics();
@@ -286,6 +356,27 @@
 </script>
 
 <style scoped>
+
+    #birth::after {
+        display: none;
+        background: url("http://127.0.0.1:8080/edit.svg") no-repeat;
+        content: " ";
+        width: 15px;
+        height: 15px;
+        background-size: 15px;
+        float: right;
+        padding-right: 30px;
+    }
+
+    #birth:hover {
+        background-color: #f3f3f3;
+        cursor: pointer;
+    }
+
+    #birth:hover::after {
+        display: block
+    }
+
     .ranobe-name > span {
         color: black;
     }
@@ -443,7 +534,7 @@
         object-fit: cover;
     }
 
-    .img-container > img {
+    .img-container > a > img {
         width: 100%;
         height: auto;
     }
@@ -490,6 +581,60 @@
         flex-direction: column;
     }
 
+    .block-info > div {
+        margin-top: 10px;
+        display: flex;
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .block-info > div > input {
+        padding-left: 5px;
+        border: 1px solid #3c3c3c;
+        border-radius: 3px;
+        cursor: pointer;
+        width: available;
+    }
+
+    .button {
+        margin-left: 5px;
+        padding: 5px 10px;
+    }
+
+    .button {
+        position: relative;
+        background-color: #4CAF50;
+        border: none;
+        color: #FFFFFF;
+        padding: 8px 10px;
+        text-align: center;
+        transition-duration: 0.4s;
+        text-decoration: none;
+        overflow: hidden;
+        cursor: pointer;
+    }
+
+    .button:after {
+        content: "";
+        background: #f1f1f1;
+        display: block;
+        position: absolute;
+        padding-top: 300%;
+        padding-left: 350%;
+        margin-left: -20px !important;
+        margin-top: -120%;
+        opacity: 0;
+        transition: all 0.8s
+    }
+
+    .button:active:after {
+        padding: 0;
+        margin: 0;
+        opacity: 1;
+        transition: 0s
+    }
+
+
     .block-info > * {
         margin-top: 3px;
     }
@@ -528,4 +673,144 @@
         color: rgba(0, 0, 0, .95);
     }
 
+    .button-shower-enter-active {
+        transition: all .3s ease;
+    }
+
+    .button-shower-leave-active {
+        transition: all .3s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+    }
+
+    .button-shower-enter, .button-shower-leave-to {
+        opacity: 0;
+        transform: translateY(14px);
+    }
+
+    /* свойства модального окна по умолчанию */
+    .modal {
+        position: fixed; /* фиксированное положение */
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        background: rgba(0, 0, 0, 0.5); /* цвет фона */
+        z-index: 1050;
+        opacity: 0; /* по умолчанию модальное окно прозрачно */
+        -webkit-transition: opacity 200ms ease-in;
+        -moz-transition: opacity 200ms ease-in;
+        transition: opacity 200ms ease-in; /* анимация перехода */
+        pointer-events: none; /* элемент невидим для событий мыши */
+        margin: 0;
+        padding: 0;
+    }
+
+    /* при отображении модального окно */
+    .modal:target {
+        opacity: 1; /* делаем окно видимым */
+        pointer-events: auto; /* элемент видим для событий мыши */
+        overflow-y: auto; /* добавляем прокрутку по y, когда элемент не помещается на страницу */
+    }
+
+    /* ширина модального окна и его отступы от экрана */
+    .modal-dialog {
+        position: relative;
+        width: auto;
+        margin: 10px;
+    }
+
+    @media (min-width: 576px) {
+        .modal-dialog {
+            max-width: 500px;
+            margin: 30px auto; /* для отображения модального окна по центру */
+        }
+    }
+
+    /* свойства для блока, содержащего контент модального окна */
+    .modal-content {
+        position: relative;
+        display: -webkit-box;
+        display: -webkit-flex;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-box-orient: vertical;
+        -webkit-box-direction: normal;
+        -webkit-flex-direction: column;
+        -ms-flex-direction: column;
+        flex-direction: column;
+        background-color: #fff;
+        -webkit-background-clip: padding-box;
+        background-clip: padding-box;
+        border: 1px solid rgba(0, 0, 0, .2);
+        border-radius: .3rem;
+        outline: 0;
+    }
+
+    @media (min-width: 768px) {
+        .modal-content {
+            -webkit-box-shadow: 0 5px 15px rgba(0, 0, 0, .5);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, .5);
+        }
+    }
+
+    /* свойства для заголовка модального окна */
+    .modal-header {
+        display: -webkit-box;
+        display: -webkit-flex;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-box-align: center;
+        -webkit-align-items: center;
+        -ms-flex-align: center;
+        align-items: center;
+        -webkit-box-pack: justify;
+        -webkit-justify-content: space-between;
+        -ms-flex-pack: justify;
+        justify-content: space-between;
+        padding: 15px;
+        border-bottom: 1px solid #eceeef;
+    }
+
+    .modal-title {
+        margin-top: 0;
+        margin-bottom: 0;
+        line-height: 1.5;
+        font-size: 1.25rem;
+        font-weight: 500;
+    }
+
+    /* свойства для кнопки "Закрыть" */
+    .close {
+        float: right;
+        font-family: sans-serif;
+        font-size: 24px;
+        font-weight: 700;
+        line-height: 1;
+        color: #000;
+        text-shadow: 0 1px 0 #fff;
+        opacity: .5;
+        text-decoration: none;
+    }
+
+    /* свойства для кнопки "Закрыть" при нахождении её в фокусе или наведении */
+    .close:focus, .close:hover {
+        color: #000;
+        text-decoration: none;
+        cursor: pointer;
+        opacity: .75;
+    }
+
+    /* свойства для блока, содержащего основное содержимое окна */
+    .modal-body {
+        position: relative;
+        -webkit-box-flex: 1;
+        -webkit-flex: 1 1 auto;
+        -ms-flex: 1 1 auto;
+        flex: 1 1 auto;
+        padding: 15px;
+        overflow: auto;
+    }
+
+    .modal-body > button {
+
+    }
 </style>

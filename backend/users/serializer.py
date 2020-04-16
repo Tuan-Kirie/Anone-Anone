@@ -38,6 +38,12 @@ class ProfileSerializer(serializers.ModelSerializer):
         fields = ('username', 'email', 'img', 'birth_date')
 
 
+class ProfileUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Profile
+        fields = ('profile_img', 'birth_date')
+
+
 class ShortUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
