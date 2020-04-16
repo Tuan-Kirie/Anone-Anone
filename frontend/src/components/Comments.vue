@@ -4,8 +4,10 @@
             <h3 v-if="comment_status !== 'editing'">Комментарии: </h3>
             <h3 v-else>Редактирование комментария</h3>
             <div v-if="token != null">
-                <textarea v-model="comment_text" placeholder="Оставьте комментарии"
-                          class="comment-text-area" id="edit-container"></textarea>
+                <!--                <textarea v-model="comment_text" placeholder="Оставьте комментарии"-->
+                <!--                          class="comment-text-area" id="edit-container"></textarea>-->
+                <ckeditor :editor="editor"  v-model="comment_text" :config="editorConfig"></ckeditor>
+
                 <div class="comment-buttons" v-if="comment_status !== 'editing'">
                     <button class="send-comment-button" @click="postComment">Отправить</button>
                 </div>
@@ -38,7 +40,7 @@
                         <span v-if="comment.show_status !== false" @click="comment.show_status = false"
                               style="margin-left: 14px;">Нет</span>
                     </div>
-                    {{comment.text}}
+                    <div v-html="comment.text"></div>
                 </div>
             </div>
         </div>
@@ -48,6 +50,8 @@
 <script>
     import axios from 'axios'
     import {mapState} from "vuex";
+    import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+
 
     export default {
         name: "Comments",
@@ -67,7 +71,11 @@
                 comment_text: '',
                 comment_status: 'Комментарии:',
                 comment_id: '',
+                editor: ClassicEditor,
+                editorConfig: {
+                    toolbar: [ 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote' ],
 
+                }
             }
         },
         methods: {
@@ -165,13 +173,16 @@
     a {
         text-decoration: none;
     }
+
     .show-edit-menu > span {
         font-size: 13px;
     }
+
     .show-edit-menu > span:hover {
         cursor: pointer;
         text-decoration: underline;
     }
+
     .show-edit-menu {
         margin-top: -7px;
         margin-bottom: 8px;
@@ -180,12 +191,14 @@
     .comments-container {
         width: 94%;
     }
+
     .comment-text-area {
         border-radius: 3px;
         padding: 12px 14px;
         width: 100%;
         height: 50px;
     }
+
     .send-comment-button {
         background-color: #2898af; /* Green */
         border: none;
@@ -202,30 +215,36 @@
         -webkit-transition-duration: 0.4s;
         transition-duration: 0.4s;
     }
+
     .comments {
         display: flex;
         flex-direction: row;
         border-top: #ababab solid 1px;
     }
+
     .comments-sub-info {
         margin-left: 15px;
         margin-top: 15px;
     }
+
     .comment-author > span > a {
         font-size: 1em;
         color: rgba(0, 0, 0, .87);
 
         font-weight: 700;
     }
+
     .comment-author > span > a:hover {
         text-shadow: 1px 0 #b7b7b7;
     }
+
     .comment-author-img {
         width: 50px;
         height: 50px;
         margin-top: 15px;
         margin-bottom: 15px;
     }
+
     .comment-author-img > img {
         display: block;
         width: 50px;
@@ -233,6 +252,7 @@
         float: left;
         border-radius: 4px;
     }
+
     .comment-text {
         width: 100%;
         padding: 5px 20px 5px 0px;
