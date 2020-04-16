@@ -42,6 +42,8 @@ INSTALLED_APPS = [
     'comments',
     'blog',
     'django_filters',
+    # clean up WILL BE ONLY ON BOTTOM OF LIST
+    'django_cleanup.apps.CleanupConfig',
 
 ]
 
