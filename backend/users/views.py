@@ -2,7 +2,8 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.http import Http404
 from rest_framework import permissions, status, mixins, generics
 from django.contrib.auth.models import User
-from rest_framework.generics import GenericAPIView, ListCreateAPIView, CreateAPIView, RetrieveUpdateAPIView
+from rest_framework.generics import GenericAPIView, ListCreateAPIView, CreateAPIView, RetrieveUpdateAPIView, \
+    UpdateAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
@@ -11,7 +12,8 @@ from ranobe.serializer import RanobeSerializer
 from .permission import ProfileOwnPermission
 from .serializer import UserSerializer, ProfileSerializer, ShortUserSerializer, BookmarkSerializer, \
     UpdateBookmarkSerializer, ProfileBookmarkSerializer, BookStatusSerializer, BookReadingStatusSerializer, \
-    UpdateBookReadingStatusSerializer, BookreadingStatusProfileSerializer, AnotherProfileSerializer
+    UpdateBookReadingStatusSerializer, BookreadingStatusProfileSerializer, AnotherProfileSerializer, \
+    ProfileUpdateSerializer
 from .models import Profile, BookReadingStatus
 from django.shortcuts import get_object_or_404
 from comments.models import Comments
@@ -103,7 +105,7 @@ class ProfileRanobesView(generics.RetrieveAPIView):
                             status.HTTP_200_OK)
 
 
-class ProfileView(generics.RetrieveAPIView, mixins.DestroyModelMixin, mixins.UpdateModelMixin):
+class ProfileView(generics.RetrieveAPIView, mixins.DestroyModelMixin):
     permission_classes = (
         permissions.IsAuthenticated,
         ProfileOwnPermission,
@@ -111,16 +113,22 @@ class ProfileView(generics.RetrieveAPIView, mixins.DestroyModelMixin, mixins.Upd
     serializer_class = ProfileSerializer
 
     def get_object(self):
-        id_user = self.request.user.id
-        obj = get_object_or_404(User, id=id_user)
+        user = self.request.user
+        obj = get_object_or_404(User, id=user.id)
         return obj
 
     def delete(self, request, *args, **kwargs):
         return self.destroy(request, *args, **kwargs)
 
-    def put(self, request, *args, **kwargs):
-        return self.update(request, *args, **kwargs)
 
+class ProfileUpdateView(UpdateAPIView):
+    permission_classes = (permissions.IsAuthenticated, ProfileOwnPermission)
+    serializer_class = ProfileUpdateSerializer
+    queryset = Profile.objects.all()
+
+    def get_object(self):
+        obj = get_object_or_404(Profile, user=self.request.user)
+        return obj
 
 class ShortUserView(generics.RetrieveAPIView):
     permission_classes = (
