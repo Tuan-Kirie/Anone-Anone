@@ -25,11 +25,10 @@ class ReadHistory(models.Model):
 
 class RanobeLikes(models.Model):
     LIKE = 1
-    DISLIKE = -1
-
+    UNLIKE = 0
     VOTES = (
-        (DISLIKE, 'Dislike'),
-        (LIKE, 'Like')
+        (LIKE, 'Like'),
+        (UNLIKE, 'Unlike')
     )
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
