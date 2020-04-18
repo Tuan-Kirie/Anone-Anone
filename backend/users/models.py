@@ -18,6 +18,14 @@ class Profile(models.Model):
         return self.user.username
 
 
+class ReadHistory(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    ranobe_chapter = models.ForeignKey(Chapters, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.ranobe_chapter.id} в ранобэ {self.ranobe_chapter.ranobe.id}"
+
+
 class BookReadingStatus(models.Model):
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
     ranobe = models.ForeignKey(Ranobe, on_delete=models.CASCADE)

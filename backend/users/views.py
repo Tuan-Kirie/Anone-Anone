@@ -1,4 +1,6 @@
-from django.core.exceptions import ObjectDoesNotExist
+from math import ceil
+
+from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned, FieldError
 from django.http import Http404
 from rest_framework import permissions, status, mixins, generics
 from django.contrib.auth.models import User
@@ -13,10 +15,12 @@ from .permission import ProfileOwnPermission
 from .serializer import UserSerializer, ProfileSerializer, ShortUserSerializer, BookmarkSerializer, \
     UpdateBookmarkSerializer, ProfileBookmarkSerializer, BookStatusSerializer, BookReadingStatusSerializer, \
     UpdateBookReadingStatusSerializer, BookreadingStatusProfileSerializer, AnotherProfileSerializer, \
-    ProfileUpdateSerializer
-from .models import Profile, BookReadingStatus
+    ProfileUpdateSerializer, ReadHistorySerializer
+from .models import Profile, BookReadingStatus, ReadHistory
 from django.shortcuts import get_object_or_404
 from comments.models import Comments
+from ranobe.models import Chapters
+from django.forms.models import model_to_dict
 
 
 class MainProfileView(ListCreateAPIView):
@@ -130,6 +134,7 @@ class ProfileUpdateView(UpdateAPIView):
         obj = get_object_or_404(Profile, user=self.request.user)
         return obj
 
+
 class ShortUserView(generics.RetrieveAPIView):
     permission_classes = (
         permissions.IsAuthenticated,
@@ -198,6 +203,66 @@ class BookmarkUpdateView(generics.RetrieveUpdateDestroyAPIView):
         except Http404:
             pass
         return Response({}, status=status.HTTP_204_NO_CONTENT)
+
+
+class ControlReadHistoryView(generics.RetrieveAPIView, mixins.CreateModelMixin):
+    permission_classes = (
+        permissions.IsAuthenticated,
+        ProfileOwnPermission
+    )
+    serializer_class = ReadHistorySerializer
+
+    def get_object(self):
+        try:
+            obj = ReadHistory.objects.get(
+                user=self.request.user,
+                ranobe_chapter__ranobe__id=self.kwargs['pk']
+            )
+            return obj
+        except ReadHistory.MultipleObjectsReturned:
+            _objects = ReadHistory.objects.all().filter(
+                user=self.request.user,
+                ranobe_chapter__ranobe__id=self.kwargs['pk']
+            )
+            [x.delete() for x in _objects[1:]]
+            return self.get_object()
+        except ReadHistory.DoesNotExist:
+            return None
+
+    def get_page_of_chapter(self):
+        """
+        Checking existing page of required chapter
+        :return: page number int  > 0
+        """
+        chapters_count = [x.id for x in Chapters.objects.all().filter(ranobe_id=self.kwargs['pk'])]
+        l_chapters_count = len(chapters_count)
+        if l_chapters_count > 50:
+            position_of_required_chapter = chapters_count.index(self.get_object().ranobe_chapter.id)
+            return ceil(position_of_required_chapter / 50)
+        else:
+            return 1
+
+    def retrieve(self, request, *args, **kwargs):
+        resp = self.get_object()
+        if resp is not None:
+            return Response({'res': self.serializer_class(resp, many=False).data, 'page': self.get_page_of_chapter()},
+                            status=status.HTTP_200_OK)
+        else:
+            return Response({"res": False})
+
+    def post(self, request, *args, **kwargs):
+        exist_obj = self.get_object()
+        if exist_obj is None:
+            obj = ReadHistory(user=request.user,
+                              ranobe_chapter=Chapters.objects.get(id=request.data['chapter_id']))
+            obj.save()
+            resp = self.get_object()
+            return Response({'res': self.serializer_class(resp, many=False).data}, status=status.HTTP_201_CREATED)
+        else:
+            exist_obj.ranobe_chapter = Chapters.objects.get(id=request.data['chapter_id'])
+            exist_obj.save()
+            resp = self.get_object()
+            return Response({'res': self.serializer_class(resp, many=False).data}, status=status.HTTP_201_CREATED)
 
 
 class BookStatusUpdateView(generics.RetrieveUpdateDestroyAPIView):
