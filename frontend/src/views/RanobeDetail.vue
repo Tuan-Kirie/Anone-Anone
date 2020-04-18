@@ -25,6 +25,11 @@
                     </div>
                 </div>
             </div>
+            <button class="like-button" @click="like">
+                <i class="heart-icon" v-bind:class="{active: isActive.like_button}"></i>
+                <span>Нравится</span>
+                <span>{{likes}}</span>
+            </button>
         </div>
         <div class="ranobe-main-column">
             <div class="ranobe-info">
@@ -35,14 +40,17 @@
                 <div class="ranobe-genres" v-if="showCheck(genres)">
                     <h3>Жанры:</h3>
                     <span v-for="genre in this.genres" :key="genre.id">
-                        <router-link :to="{name: 'Ranobe', params: {'choosedGenre': {name: genre.name, id: genre.id} }}"> {{genre.name}}</router-link>
+                        <router-link
+                                :to="{name: 'Ranobe', params: {'choosedGenre': {name: genre.name, id: genre.id} }}"> {{genre.name}}</router-link>
                     </span>
                 </div>
                 <div class="ranobe-description" v-if="showCheck(ranobe_description)">
                     <h3>Описание:</h3>
                     <div class="description-box">{{this.ranobe_description}}</div>
                 </div>
-                <div class="comment-show-button" v-if="!show_comments" @click="show_comments = true">Загрузить комментарии</div>
+                <div class="comment-show-button" v-if="!show_comments" @click="show_comments = true">Загрузить
+                    комментарии
+                </div>
                 <Comments v-bind:ranobeId="ranobe_id" v-if="show_comments"/>
             </div>
         </div>
@@ -110,6 +118,10 @@
                 show_dropdown_content: false,
                 show_dropdown_menu: false,
                 book_reading_state: '',
+                isActive: {
+                    like_button: false,
+                },
+                likes: null,
             }
         },
         methods: {
@@ -121,14 +133,14 @@
                         this.ranobe_description = resp.data.description;
                         this.publisher_name = resp.data.publisher_name;
                         if (resp.data.tags && resp.data.tags.length > 0) {
-                            for (let i = 0; i < resp.data.tags.length; i ++)
+                            for (let i = 0; i < resp.data.tags.length; i++)
                                 this.tags.push({
                                     'id': resp.data.tags[i],
                                     'name': resp.data.tags_name[i]
                                 })
                         }
-                        if (resp.data.genres && resp.data.genres.length > 0 ) {
-                            for (let j = 0; j < resp.data.genres.length; j ++) {
+                        if (resp.data.genres && resp.data.genres.length > 0) {
+                            for (let j = 0; j < resp.data.genres.length; j++) {
                                 this.genres.push({
                                     'id': resp.data.genres[j],
                                     'name': resp.data.genres_name[j]
@@ -235,23 +247,44 @@
                     })
             },
             showCheck(any_list) {
-              if (any_list != null) {
-                  if (any_list.length > 0) {
-                      return true
-                  }
-              }
+                if (any_list != null) {
+                    if (any_list.length > 0) {
+                        return true
+                    }
+                }
             },
-
+            getLikes() {
+                let url = `http://127.0.0.1:8000/ranobe/${this.ranobe_id}/likes/`
+                axios.get(url, {headers: {'Authorization': "JWT " + this.$store.state.token}})
+                    .then(resp => {
+                        this.isActive.like_button = resp.data.res.like === 1
+                        this.likes = resp.data.all.like__sum
+                    }).catch(er => console.log(er))
+            },
+            like() {
+                let url = `http://127.0.0.1:8000/ranobe/${this.ranobe_id}/likes/`
+                let _data = new FormData()
+                let _val = 0;
+                if (this.isActive.like_button === false) {
+                    _val = 1
+                }
+                _data.append('like', _val)
+                axios.post(url, _data, {headers: {'Authorization': "JWT " + this.$store.state.token}})
+                    .then(resp => {
+                        console.log(resp)
+                        this.getLikes()
+                    }).catch(er => console.log(er))
+            }
         },
         mounted() {
             //reset scroll position cause window saving before page scroll pos
-            window.scrollTo(0,0);
-            if (this.$store.state.token !== null)
-            {
+            window.scrollTo(0, 0);
+            if (this.$store.state.token !== null) {
                 this.checkBookmark();
                 this.getBookState();
             }
             this.getData();
+            this.getLikes();
             window.addEventListener('scroll', this.lazyloadComments);
 
         }
@@ -259,6 +292,55 @@
 </script>
 
 <style scoped>
+    .like-button {
+        width: 100%;
+        margin-top: 10px;
+        text-align: center;
+        outline: none;
+        border: none;
+        height: 25px;
+        line-height: 30px;
+        padding: 5px 0 30px 0;
+        background-color: white;
+        font-size: 15px;
+        font-weight: 400;
+        font-family: Open Sans, Arial, sans-serif !important;
+    }
+
+    .heart-icon {
+        position: relative;
+        top: 5px;
+    }
+
+    .heart-icon.active::before {
+        content: " ";
+        display: inline-block;
+        background: url("http://127.0.0.1:8080/heart_a.svg"), no-repeat;
+        width: 20px;
+        height: 20px;
+        margin-right: 4px;
+        background-size: 20px;
+    }
+
+    .heart-icon::before {
+        content: " ";
+        display: inline-block;
+        background: url("http://127.0.0.1:8080/heart.svg"), no-repeat;
+        width: 20px;
+        height: 20px;
+        margin-right: 4px;
+        background-size: 20px;
+
+    }
+
+    .like-button > span:last-child {
+        margin-left: 3px;
+    }
+
+    .like-button:hover {
+        background: rgba(0, 0, 0, .1);
+    }
+
     .comment-show-button {
         margin-top: 70px;
         height: 30px;
@@ -270,9 +352,11 @@
         text-align: center;
         padding-top: 10px;
     }
+
     .comment-show-button:hover, .comment-show-button:active {
         box-shadow: 0 1px 1px 1px rgba(0, 0, 0, .1), 0 0 1px 1px #3c82e6;
     }
+
     .tags-column {
         margin-top: 20px;
         margin-right: auto;
@@ -286,13 +370,16 @@
         height: 290px;
         overflow: hidden;
     }
+
     .tags-column span:last-child {
         padding-bottom: 20px;
     }
+
     .tags-column > span {
         margin-top: 10px;
         padding-top: 7px;
     }
+
     .tags-column > span > a {
         text-decoration: none;
         padding: 7px 12px;
@@ -306,11 +393,13 @@
         margin-top: 7px;
         border-radius: 10px;
     }
+
     .tags-column > h3 {
         padding-bottom: 7px;
         margin-bottom: 6px;
         border-bottom: 1px solid #cecece;
     }
+
     .show-tags {
         margin-left: auto;
         margin-right: auto;
@@ -323,9 +412,11 @@
         font-size: 1vmax;
         border: 1px solid #d8d8d8;
     }
+
     .show-tags:last-child {
         padding-bottom: 10px;
     }
+
     .show-tags:hover, .show-tags:active {
         box-shadow: 0 1px 1px 1px rgba(0, 0, 0, .1), 0 0 1px 1px #3c82e6;
     }
@@ -339,6 +430,7 @@
         justify-self: center;
         display: inline-flex;
     }
+
     .ranobe-left-column {
         width: 18.75%;
         padding-left: 10px;
@@ -346,22 +438,27 @@
         height: 500px;
         top: 75px;
     }
+
     .ranobe-left-column > a {
         text-decoration: none;
     }
+
     .ranobe-main-column {
         padding-left: 1rem;
         padding-right: 1rem;
         width: 62.5%;
     }
+
     .ranobe-right-column {
         width: 18.75%;
         position: sticky;
         height: 500px;
         top: 75px;
     }
+
     .image-container {
     }
+
     .image-container > img {
         position: relative;
         max-width: 100%;
@@ -372,6 +469,7 @@
         border-radius: 6px;
         cursor: pointer;
     }
+
     .read-button {
         margin-top: 10px;
         width: 100%;
@@ -385,18 +483,20 @@
         text-align: center;
         padding-top: 3px;
     }
+
     .dropdown-menu {
         border: 1px solid hsla(0, 0%, 54.9%, .55);
-        padding: 6px 20px;
+        padding: 5px 0 5px 0;
         text-align: center;
-        width: 80%;
-        margin-left: 3px;
+        width: 100%;
         font-size: .9em;
         margin-top: 10px;
     }
+
     .dropdown-menu:active, .dropdown-menu:hover {
         box-shadow: 0 1px 1px 1px rgba(0, 0, 0, .1), 0 0 1px 1px #3c82e6;
     }
+
     .dropdown-menu > span::before {
         background-image: url("http://127.0.0.1:8080/plus.svg");
         margin-right: 3px;
@@ -406,20 +506,25 @@
         background-size: 12px 12px;
         height: 12px;
     }
+
     .dropdown-menu {
         cursor: pointer;
     }
+
     .add-to-planned {
         border-top: 1px dotted #3c3c3c;
         padding-top: 10px;
     }
+
     .dropdown-content > div {
         margin-top: 10px;
         font-weight: bold;
     }
+
     .dropdown-content > div:hover {
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
     }
+
     .add-to-bookmark, .del-bookmark {
         border: 1px solid hsla(0, 0%, 54.9%, .55);
         padding: 6px 26px 6px 12px;
@@ -430,9 +535,11 @@
         margin-top: 10px;
         cursor: pointer;
     }
+
     .add-to-bookmark:hover, .del-bookmark:hover {
         box-shadow: 0 1px 1px 1px rgba(0, 0, 0, .1), 0 0 1px 1px #3c82e6;
     }
+
     .add-to-bookmark > span:before, .del-bookmark > span:before {
         background-image: url("http://127.0.0.1:8080/bookmark.svg");
         margin-right: 3px;
@@ -443,21 +550,25 @@
         background-size: 12px 12px;
         height: 12px;
     }
+
     h1 {
         font-size: 1.71428571rem;
     }
+
     .ranobe-tags, .ranobe-genres {
         display: inline-flex;
         align-items: center;
         flex-wrap: wrap;
         width: 95%;
     }
+
     .ranobe-tags > span, .ranobe-genres > span {
         padding-top: 3px;
         display: block;
         width: auto;
         /*max-height: 20px;*/
     }
+
     .ranobe-tags > span > a, .ranobe-genres > span > a {
         display: inline-block;
         padding: 7px 12px;
@@ -473,13 +584,16 @@
         white-space: nowrap;
         background-color: hsla(240, 4%, 49%, .07);
     }
+
     .ranobe-tags > h3, .ranobe-genres > h3 {
         padding-right: 6px;
     }
+
     .description-box {
         overflow: hidden;
         overflow-wrap: break-word;
     }
+
     /*.slide-fade-enter-active {*/
     /*    transition: all .3s ease;*/
     /*}*/

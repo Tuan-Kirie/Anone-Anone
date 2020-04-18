@@ -182,8 +182,7 @@ class UserLikesView(generics.RetrieveAPIView, mixins.UpdateModelMixin):
 
     def calculate_likes(self):
         likes_of_ranobe = RanobeLikes.objects.all().filter(ranobe_id=self.kwargs['pk'])
-        print(likes_of_ranobe.aggregate(Sum('like')))
-        return 1
+        return likes_of_ranobe.aggregate(Sum('like'))
 
     def retrieve(self, request, *args, **kwargs):
         like = self.get_object()
@@ -191,19 +190,21 @@ class UserLikesView(generics.RetrieveAPIView, mixins.UpdateModelMixin):
             return Response({'res': self.serializer_class(like, many=False).data,
                              'all': self.calculate_likes()}, status=status.HTTP_200_OK)
         else:
-            return Response({'resp': False})
+            return Response({'resp': False,
+                             'all': self.calculate_likes()})
 
     def post(self, request, *args, **kwargs):
         like = self.get_object()
+        sent_like = RanobeLikes.LIKE if request.data['like'] == str(1) else RanobeLikes.UNLIKE
+        print(sent_like)
         if like is False:
-
             RanobeLikes.objects.create(user=request.user,
                                        ranobe=Ranobe.objects.get(id=self.kwargs['pk']),
-                                       like=request.data['like'])
+                                       like=sent_like)
             like = self.get_object()
             return Response({'res': self.serializer_class(like, many=False).data}, status=status.HTTP_201_CREATED)
         else:
-            like.like = request.data['like']
+            like.like = sent_like
             like.save()
             return Response({'res': self.serializer_class(like, many=False).data}, status=status.HTTP_201_CREATED)
 
