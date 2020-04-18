@@ -15,13 +15,12 @@ from .permission import ProfileOwnPermission
 from .serializer import UserSerializer, ProfileSerializer, ShortUserSerializer, BookmarkSerializer, \
     UpdateBookmarkSerializer, ProfileBookmarkSerializer, BookStatusSerializer, BookReadingStatusSerializer, \
     UpdateBookReadingStatusSerializer, BookreadingStatusProfileSerializer, AnotherProfileSerializer, \
-    ProfileUpdateSerializer, ReadHistorySerializer, UserLikesSerializer
-from .models import Profile, BookReadingStatus, ReadHistory, RanobeLikes
+    ProfileUpdateSerializer, ReadHistorySerializer
+from .models import Profile, BookReadingStatus, ReadHistory
 from django.shortcuts import get_object_or_404
 from comments.models import Comments
-from ranobe.models import Chapters, Ranobe
+from ranobe.models import Chapters
 from django.forms.models import model_to_dict
-from django.db.models import Sum
 
 
 class MainProfileView(ListCreateAPIView):
@@ -163,50 +162,6 @@ class BookmarkCheckView(generics.RetrieveAPIView):
         bookmarks = obj.bookmarked.all()
         response_data = RanobeSerializer(bookmarks, many=True)
         return Response(response_data.data, status=status.HTTP_200_OK)
-
-
-class UserLikesView(generics.RetrieveAPIView, mixins.UpdateModelMixin):
-    permission_classes = (permissions.IsAuthenticated, ProfileOwnPermission)
-    serializer_class = UserLikesSerializer
-
-    def get_object(self):
-        try:
-            like = RanobeLikes.objects.get(user=self.request.user, ranobe=self.kwargs['pk'])
-            return like
-        except RanobeLikes.DoesNotExist:
-            return False
-        except RanobeLikes.MultipleObjectsReturned:
-            likes = RanobeLikes.objects.all().filter(user=self.request.user, ranobe=self.kwargs['pk'])
-            [x.delete() for x in likes[:len(likes) - 1]]
-            return self.get_object()
-
-    def calculate_likes(self):
-        likes_of_ranobe = RanobeLikes.objects.all().filter(ranobe_id=self.kwargs['pk'])
-        print(likes_of_ranobe.aggregate(Sum('like')))
-        return 1
-
-    def retrieve(self, request, *args, **kwargs):
-        like = self.get_object()
-        if like is not False:
-            return Response({'res': self.serializer_class(like, many=False).data,
-                             'all': self.calculate_likes()}, status=status.HTTP_200_OK)
-        else:
-            return Response({'resp': False})
-
-    def post(self, request, *args, **kwargs):
-        like = self.get_object()
-        if like is False:
-
-            RanobeLikes.objects.create(user=request.user,
-                                       ranobe=Ranobe.objects.get(id=self.kwargs['pk']),
-                                       like=request.data['like'])
-            like = self.get_object()
-            return Response({'res': self.serializer_class(like, many=False).data}, status=status.HTTP_201_CREATED)
-        else:
-            like.like = request.data['like']
-            like.save()
-            return Response({'res': self.serializer_class(like, many=False).data}, status=status.HTTP_201_CREATED)
-
 
 
 class BookmarkUpdateView(generics.RetrieveUpdateDestroyAPIView):

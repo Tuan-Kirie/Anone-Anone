@@ -7,7 +7,7 @@ from rest_framework_jwt.views import verify_jwt_token
 from ranobe.views import RanobeList, RanobeDetailView, ChapterPageView, DetailChapterPage
 from users.views import MainProfileView, CreateUserView, ProfileView, ShortUserView, BookmarkUpdateView, \
     BookmarkCheckView, BookStatusUpdateView, ProfileStatisticView, ProfileCommentsView, ProfileRanobesView, \
-    AnotherUserView, AnotherUserMarkedRanobesView, ProfileUpdateView, ControlReadHistoryView, UserLikesView
+    AnotherUserView, AnotherUserMarkedRanobesView, ProfileUpdateView, ControlReadHistoryView
 from django.conf.urls.static import static
 from django.conf import settings
 from django.contrib.staticfiles.storage import staticfiles_storage
@@ -27,7 +27,6 @@ urlpatterns = [
     url(r'^ranobe/(?P<pk>[0-9]+)/readstatus/$', BookStatusUpdateView.as_view()),
     url(r'^ranobe/(?P<pk>[0-9]+)/chapters/', ChapterPageView.as_view()),
     url(r'^ranobe/(?P<pk>[0-9]+)/history/$', ControlReadHistoryView.as_view()),
-    url(r'^ranobe/(?P<pk>[0-9]+)/likes/$', UserLikesView.as_view()),
     url(r'^ranobe/chapters/read/(?P<chapter_id>[0-9]+)/$', DetailChapterPage.as_view()),
     path('user/register/', CreateUserView.as_view()),
     path('user/profile/', ProfileView.as_view()),
