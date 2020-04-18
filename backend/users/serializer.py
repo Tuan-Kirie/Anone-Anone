@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
 from rest_framework.validators import UniqueValidator
-from .models import Profile, BookReadingStatus
+from .models import Profile, BookReadingStatus, ReadHistory
 from ranobe.models import Ranobe
 
 
@@ -139,3 +139,9 @@ class AnotherProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['id', 'username', 'email', 'born', 'img']
+
+
+class ReadHistorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ReadHistory
+        fields = '__all__'

@@ -53,6 +53,10 @@
                 chapter_text: '',
                 current_id: null,
                 index: 0,
+                read_history: {
+                    last_chapter: null,
+                    page: null,
+                },
             }
         },
         methods: {
@@ -90,6 +94,7 @@
                 }
             },
             selectNextChapter() {
+                this.addToReadingHistory();
                 if (this.checkChapterPos()) {
                     // console.log(this.chapters)
                     let url = 'http://127.0.0.1:8000/ranobe/chapters/read/' + (this.chapters[this.index].id + 1) + '/';
@@ -161,13 +166,48 @@
                 if (Math.round(a) === b) {
                     this.getNextChapterPage()
                 }
-            }
+            },
+            checkReadingHistory() {
+                let url = `http://127.0.0.1:8000/ranobe/${this.ranobe_id}/history/`;
+                return axios.get(url, {headers: {'Authorization': "JWT " + this.$store.state.token}})
+                    .then(resp => {
+                        this.read_history.last_chapter = resp.data.res
+                        this.read_history.page = resp.data.page
+                        this.loadToChapterExistingPage();
+                    }).catch(er => {
+                        console.log(er);
+                        this.read_history.last_chapter = false
+                    });
+            },
+            addToReadingHistory() {
+                let url = `http://127.0.0.1:8000/ranobe/${this.ranobe_id}/history/`;
+                let _data = new FormData()
+                _data.append('chapter_id', this.current_id)
+                axios.post(url, _data, {headers: {'Authorization': "JWT " + this.$store.state.token}})
+                    .then(resp => {
+                        console.log(resp)
+                    }).catch(er => console.log(er))
+            },
+            loadToChapterExistingPage() {
+                if (typeof this.read_history.last_chapter === 'object') {
+                    for (let i = 0; i < this.read_history.page; i++) {
+                        this.getNextChapterPage()
+                        let _index = null;
+                        for (let t = 0; t < this.chapters.length; t++) {
+                            if (this.chapters[t].id === this.read_history.last_chapter.ranobe_chapter) {
+                                _index = t
+                            }
+                        }
+                        this.selectChapter(this.read_history.last_chapter.ranobe_chapter, _index)
+                    }
+                }
+            },
         },
         mounted() {
             //Fix with event saving in $window and get request
             window.removeEventListener('scroll', this.getNext_page);
-
             this.getChaptersFisrt();
+            this.checkReadingHistory();
         },
         destroyed() {
 
@@ -257,6 +297,7 @@
         width: 300px;
         overflow: scroll;
     }
+
     .chapter-menu > h4 {
         width: 100%;
         text-align: center;
@@ -270,25 +311,30 @@
         display: flex;
         flex-direction: column;
     }
+
     .search-chapter {
         min-width: 100%;
         padding-bottom: 10px;
         border-bottom: 1px solid #3c3c3c;
     }
+
     .search-chapter > input {
         min-width: 95%;
         height: 30px;
         padding-left: 6px;
     }
+
     .chapter-container > a {
         min-width: 100%;
         min-height: 30px;
         padding-left: 3px;
     }
+
     .chapter-container > a:hover {
         color: #4183c4;
         cursor: pointer;
     }
+
     .chapter-container > a > span {
         text-overflow: ellipsis;
         display: block;
@@ -296,6 +342,7 @@
         overflow: hidden;
         white-space: nowrap;
     }
+
     /*::-webkit-scrollbar {*/
     /*    -webkit-appearance: none;*/
     /*    width: 10px;*/

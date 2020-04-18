@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Profile, BookReadingStatus
+from .models import Profile, BookReadingStatus, ReadHistory
 
 
 # Register your models here.
@@ -8,4 +8,7 @@ from .models import Profile, BookReadingStatus
 class ProfileAdmin(admin.ModelAdmin):
     fields = ['user', 'birth_date', 'profile_img']
 
+
 admin.site.register(BookReadingStatus)
+
+admin.site.register(ReadHistory)
