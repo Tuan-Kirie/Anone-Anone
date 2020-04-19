@@ -282,9 +282,9 @@ class ControlReadHistoryView(generics.RetrieveAPIView, mixins.CreateModelMixin):
         """
         chapters_count = [x.id for x in Chapters.objects.all().filter(ranobe_id=self.kwargs['pk'])]
         l_chapters_count = len(chapters_count)
-        if l_chapters_count > 50:
+        if l_chapters_count > 100:
             position_of_required_chapter = chapters_count.index(self.get_object().ranobe_chapter.id)
-            return ceil(position_of_required_chapter / 50)
+            return ceil(position_of_required_chapter / 100)
         else:
             return 1
 

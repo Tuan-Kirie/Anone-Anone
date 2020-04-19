@@ -1,9 +1,10 @@
 <template>
     <div class="read-container">
         <div class="chapter-nav">
-            <div class="prev-page" @click="getPreviousChapter"><span>Предыдущая страница</span></div>
+            <div class="prev-page" @click="getPrevPage" :class="{disable: isActive.disable_prev_btn}">
+                <span>Предыдущая страница</span></div>
             <div class="open" @click="show_menu = !show_menu"><span>Оглавление</span></div>
-            <div class="next-page" @click="selectNextChapter">
+            <div class="next-page" @click="getNextPage" :class="{disable: isActive.disable_next_btn}">
                 <span>Следующая страница</span>
             </div>
         </div>
@@ -11,24 +12,24 @@
             <div v-if="show_menu" class="chapter-menu">
                 <h4>ОГЛАВЛЕНИЕ</h4>
                 <div class="search-chapter">
-                    <input type="text" placeholder="Найти главу" v-model="search_text" @change="searchChapter">
+                    <input type="text" placeholder="Найти главу" v-model="search_text" @input="searchChapter">
                 </div>
                 <h4>Главы</h4>
-                <div class="chapter-container" v-on:scroll="lazyloadChapters">
-                    <a v-for="(chapter, index) in this.chapters" :key="chapter.id">
-                        <span @click="selectChapter(chapter.id, index)">{{index + 1}}|{{chapter.chapter_name}}</span>
+                <div class="chapter-container" v-on:scroll="scrollLoadChapters">
+                    <a v-for="(chapter, index) in this.chapters" :key="chapter.id" @click="selectPage(chapter.id)">
+                        <span>{{index + 1}}|{{chapter.chapter_name}}</span>
                     </a>
                 </div>
             </div>
         </transition>
         <div class="chapter-content">
-            <div class="chapter-name">{{chapter_name}}</div>
-            <div class="chapter_text" v-html="chapter_text"></div>
+            <div class="chapter-name">{{selectedChapter.name}}</div>
+            <div class="chapter_text" v-html="selectedChapter.text"></div>
         </div>
         <div class="chapter-nav">
-            <div class="prev-page" @click="getPreviousChapter"><span>Предыдущая страница</span></div>
-            <div class="open" @click="show_menu = !show_menu"><span>Оглавление</span></div>
-            <div class="next-page" @click="selectNextChapter">
+            <div class="prev-page"><span>Предыдущая страница</span></div>
+            <div class="open"><span>Оглавление</span></div>
+            <div class="next-page">
                 <span>Следующая страница</span>
             </div>
         </div>
@@ -42,176 +43,177 @@
         props: ['ranobeId'],
         data() {
             return {
-                chapter_page: '',
-                show_menu: false,
                 chapters: [],
+                next_page_link: '',
+                previous_page_link: null,
+                show_menu: false,
                 search_text: '',
-                serched_chapters: [],
-                ranobe_id: this.ranobeId,
-                next_chapter_page: '',
-                chapter_name: '',
-                chapter_text: '',
-                current_id: null,
-                index: 0,
                 read_history: {
                     last_chapter: null,
                     page: null,
                 },
+                selectedChapter: {
+                    id: null,
+                    name: null,
+                    text: null,
+                },
+                isActive: {
+                    scrollLoad: true,
+                    disable_next_btn: false,
+                    disable_prev_btn: false,
+                },
+                headers: {headers: {'Authorization': "JWT " + this.$store.state.token}},
             }
         },
         methods: {
-            searchChapter() {
-                if (this.search_text.length > 0) {
-                    let search_url = "http://127.0.0.1:8000/ranobe/" + this.ranobe_id + "/chapters/?search=" + this.search_text;
-                    axios.get(search_url)
-                        .then(
-                            resp => {
-                                this.chapters = resp.data.results
-                            }
-                        )
-                }
-            },
-            selectChapter(id, index) {
-                let url = 'http://127.0.0.1:8000/ranobe/chapters/read/' + id;
-                axios.get(url)
-                    .then(chapter_resp => {
-                        this.chapter_text = chapter_resp.data.text;
-                        this.chapter_name = chapter_resp.data.chapter_name;
-                        this.current_id = chapter_resp.data.id;
-                        this.index = index
-                    }).catch(er => console.log(er));
-            },
-            checkChapterPos() {
-                if (this.index < (this.chapters.length - 12) && this.next_chapter_page !== null) {
-                    return true
-                } else if (this.index === (this.chapters.length - 1) && this.next_chapter_page === null) {
-                    return false
-                } else if ((this.index >= (this.chapters.length - 12)) && this.next_chapter_page !== null) {
-                    this.getNextChapterPage();
-                    return true
+            checkBtn() {
+                let selected_position = this.getPositionLoop()
+                console.log(selected_position)
+                console.log(this.chapters.length)
+                if (selected_position === 0) {
+                    this.isActive.disable_prev_btn = true
+                    this.isActive.disable_next_btn = false
+                } else if (selected_position === this.chapters.length - 1) {
+                    this.isActive.disable_next_btn = true
+                    this.isActive.disable_prev_btn = false
                 } else {
-                    return false
+                    this.isActive.disable_prev_btn = false
+                    this.isActive.disable_next_btn = false
                 }
+
             },
-            selectNextChapter() {
-                this.addToReadingHistory();
-                if (this.checkChapterPos()) {
-                    // console.log(this.chapters)
-                    let url = 'http://127.0.0.1:8000/ranobe/chapters/read/' + (this.chapters[this.index].id + 1) + '/';
-                    axios.get(url)
-                        .then(chapter_resp => {
-                            this.chapter_text = chapter_resp.data.text;
-                            this.chapter_name = chapter_resp.data.chapter_name;
-                            this.current_id = chapter_resp.data.id;
-                            this.index++;
-                        }).catch(er => console.log(er));
-                }
-            },
-            getChaptersFisrt() {
-                let chapter_url = 'http://127.0.0.1:8000/ranobe/' + this.ranobe_id + /chapters/;
-                axios.get(chapter_url)
+            searchChapter() {
+                let url = "http://127.0.0.1:8000/ranobe/" + this.ranobeId + "/chapters/?search=" + this.search_text;
+                axios.get(url)
                     .then(resp => {
-                        if (resp.data.next != null) {
-                            this.next_chapter_page = resp.data.next
+                            this.chapters = resp.data.results
                         }
-                        if (resp.data.results != null) {
-                            let url = 'http://127.0.0.1:8000/ranobe/chapters/read/' + resp.data.results[0].id;
-                            axios.get(url)
-                                .then(chapter_resp => {
-                                    this.chapter_text = chapter_resp.data.text;
-                                    this.chapter_name = chapter_resp.data.chapter_name;
-                                    this.current_id = chapter_resp.data.id
-                                }).catch(er => console.log(er));
-                            if (resp.data.results.length > 0) {
-                                for (let i = 0; i !== resp.data.results.length; i++) {
-                                    this.chapters.push(resp.data.results[i])
-                                }
-                            }
-                        }
-                    }).catch(er => console.log(er))
+                    )
             },
-            getNextChapterPage: function () {
-                if (this.next_chapter_page != null) {
-                    if (this.next_chapter_page.length > 0) {
-                        axios.get(this.next_chapter_page)
-                            .then(resp => {
-                                this.next_chapter_page = resp.data.next;
-                                if (resp.data.results != null) {
-                                    if (resp.data.results.length > 0) {
-                                        for (let i = 0; i !== resp.data.results.length; i++) {
-                                            this.chapters.push(resp.data.results[i])
-                                        }
-                                    }
-                                }
-                            }).catch(er => console.log(er))
+            scrollLoadChapters() {
+                if (this.isActive.scrollLoad) {
+                    let a = document.querySelector('.chapter-container').scrollTop;
+                    let b = (document.querySelector('.chapter-container').scrollHeight - document.querySelector('.chapter-container').clientHeight)
+                    if (Math.round(a) === b) {
+                        this.loadNextPageOfChapters()
                     }
                 }
             },
-            getPreviousChapter() {
-                if (this.index !== 0) {
-                    // console.log(this.chapters)
-                    let url = 'http://127.0.0.1:8000/ranobe/chapters/read/' + (this.chapters[this.index].id - 1) + '/';
-                    axios.get(url)
-                        .then(chapter_resp => {
-                            this.chapter_text = chapter_resp.data.text;
-                            this.chapter_name = chapter_resp.data.chapter_name;
-                            this.current_id = chapter_resp.data.id;
-                            this.index--;
-                        }).catch(er => console.log(er));
-                }
-            },
-            lazyloadChapters() {
-                let a = document.querySelector('.chapter-container').scrollTop;
-                let b = (document.querySelector('.chapter-container').scrollHeight - document.querySelector('.chapter-container').clientHeight)
-                if (Math.round(a) === b) {
-                    this.getNextChapterPage()
-                }
-            },
-            checkReadingHistory() {
-                let url = `http://127.0.0.1:8000/ranobe/${this.ranobe_id}/history/`;
-                return axios.get(url, {headers: {'Authorization': "JWT " + this.$store.state.token}})
+            getFirst() {
+                let url = `http://127.0.0.1:8000/ranobe/${this.ranobeId}/chapters/`
+                axios.get(url)
                     .then(resp => {
-                        this.read_history.last_chapter = resp.data.res
-                        this.read_history.page = resp.data.page
-                        this.loadToChapterExistingPage();
-                    }).catch(er => {
-                        console.log(er);
-                        this.read_history.last_chapter = false
-                    });
-            },
-            addToReadingHistory() {
-                let url = `http://127.0.0.1:8000/ranobe/${this.ranobe_id}/history/`;
-                let _data = new FormData()
-                _data.append('chapter_id', this.current_id)
-                axios.post(url, _data, {headers: {'Authorization': "JWT " + this.$store.state.token}})
-                    .then(resp => {
-                        console.log(resp)
+                        this.chapters = resp.data.results
+                        this.next_page_link = resp.data.next
+                        this.previous_page_link = resp.data.prev
+                        if (this.chapters.length > 0) {
+                            this.selectPage(this.chapters[0].id)
+                        }
                     }).catch(er => console.log(er))
             },
-            loadToChapterExistingPage() {
-                if (typeof this.read_history.last_chapter === 'object') {
-                    for (let i = 0; i < this.read_history.page; i++) {
-                        this.getNextChapterPage()
-                        let _index = null;
-                        for (let t = 0; t < this.chapters.length; t++) {
-                            if (this.chapters[t].id === this.read_history.last_chapter.ranobe_chapter) {
-                                _index = t
+            selectPage(chapter_id) {
+                if (chapter_id !== null && chapter_id !== undefined) {
+                    let url = `http://127.0.0.1:8000/ranobe/chapters/read/${chapter_id}/`
+                    axios.get(url)
+                        .then(resp => {
+                            this.selectedChapter.id = resp.data.id
+                            this.selectedChapter.name = resp.data.chapter_name;
+                            this.selectedChapter.text = resp.data.text
+                            this.checkBtn()
+                        }).catch(er => console.log(er))
+                }
+            },
+            loadNextPageOfChapters: function () {
+                if (this.next_page_link !== null && this.next_page_link !== undefined) {
+                    axios.get(this.next_page_link).then(resp => {
+                        this.next_page_link = resp.data.next;
+                        this.chapters = this.chapters.concat(resp.data.results)
+                    }).catch(er => console.log(er))
+                }
+            },
+            getReadHistory() {
+                if (this.$store.state.token !== null) {
+                    let url = `http://127.0.0.1:8000/ranobe/${this.ranobeId}/history/`
+                    axios.get(url, this.headers)
+                        .then(resp => {
+                            if (resp.data.res !== false) {
+                                this.read_history.last_chapter = resp.data.res.ranobe_chapter
+                                this.read_history.page = resp.data.page
+                                this.uploadChapterData()
                             }
+                        }).catch(er => {
+                        console.log(er)
+                    })
+                }
+            },
+            uploadChapterData() {
+                if (this.read_history.page !== null || this.read_history.page !== 1) {
+                    let url = `http://127.0.0.1:8000/ranobe/${this.ranobeId}/chapters/?page_size=10000`
+                    axios.get(url)
+                        .then(resp => {
+                            this.chapters = resp.data.results
+                            this.next_page_link = resp.data.next
+                            this.selectPage(this.read_history.last_chapter)
+                        })
+                }
+            },
+            getPositionLoop() {
+                for (let i = 0; i < this.chapters.length; i++) {
+                    if (this.chapters[i].id === this.selectedChapter.id) {
+                        return i
+                    }
+                }
+                return -1
+            },
+            getNextPage() {
+                if (this.isActive.disable_next_btn === false) {
+                    if (this.next_page_link === null || this.next_page_link === undefined) {
+                        let chapter_position = this.getPositionLoop()
+                        console.log(chapter_position)
+                        if (chapter_position !== this.chapters.length && chapter_position !== -1) {
+                            this.selectPage(this.chapters[chapter_position + 1].id)
+                            this.addToHistory()
                         }
-                        this.selectChapter(this.read_history.last_chapter.ranobe_chapter, _index)
+
+                    } else {
+                        let chapter_position = this.getPositionLoop()
+                        if (chapter_position > this.chapters.length - 10) {
+                            this.loadNextPageOfChapters()
+                            this.selectPage(this.chapters[chapter_position + 1].id)
+                            this.addToHistory()
+                        }
                     }
                 }
             },
+            getPrevPage() {
+                if (this.isActive.disable_prev_btn === false) {
+                    let chapter_position = this.getPositionLoop()
+                    if (chapter_position !== 0) {
+                        console.log(chapter_position)
+                        this.selectPage(this.chapters[chapter_position - 1].id)
+                        this.addToHistory()
+                    }
+                }
+            },
+            addToHistory() {
+                if (this.$store.state.token !== null) {
+                    if (this.selectedChapter.id !== null && this.selectedChapter.id !== undefined) {
+                        let url = `http://127.0.0.1:8000/ranobe/${this.ranobeId}/history/`;
+                        let _data = new FormData()
+                        _data.append('chapter_id', this.selectedChapter.id)
+                        axios.post(url, _data, this.headers)
+                            .then(resp => console.log(resp)).catch(er => console.log(er))
+                    }
+                }
+            }
         },
         mounted() {
             //Fix with event saving in $window and get request
             window.removeEventListener('scroll', this.getNext_page);
-            this.getChaptersFisrt();
-            this.checkReadingHistory();
-        },
-        destroyed() {
-
+            this.getFirst();
+            this.getReadHistory();
         }
+        ,
     }
 </script>
 
@@ -223,6 +225,10 @@
 
     .prev-page {
     }
+    .prev-page.disable:hover, .next-page.disable:hover {
+        background-color: rgba(255, 0, 0, 0.11 );
+    }
+
 
     .read-container {
         padding: 1em;
