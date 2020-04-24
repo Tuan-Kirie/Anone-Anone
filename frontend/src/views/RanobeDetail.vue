@@ -305,6 +305,7 @@
         font-size: 15px;
         font-weight: 400;
         font-family: Open Sans, Arial, sans-serif !important;
+        cursor: pointer;
     }
 
     .heart-icon {

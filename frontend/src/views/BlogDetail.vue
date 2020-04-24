@@ -70,7 +70,7 @@
         background-color: white;
         border-radius: 6px;
         border: 1px solid #dadada;
-        min-height: 500px;
+        height: max-content;
     }
     .header {
         width: 100%;
