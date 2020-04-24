@@ -10,7 +10,7 @@
                         <div class="date">{{normalizeDate(post.published_date)}}</div>
                     </div>
                 </div>
-                <div class="text">{{post.text}}</div>
+                <div class="text" v-html="post.text"></div>
                 <div class="read-btn-container">
                     <router-link class="blog-link"
                                  :to="{ name: 'BlogDetail', params: { postId: post.id }}">
@@ -62,6 +62,8 @@
 <style scoped>
     .text {
         padding-top: 20px;
+        overflow: hidden;
+        word-wrap: break-spaces;
     }
     .meta-data {
         display: inline-flex;
@@ -108,6 +110,7 @@
     .blog-wrapper {
         width: 100%;
         height: auto;
+        /*padding-bottom: 250px;*/
     }
     .blog {
         width: 90%;
@@ -120,5 +123,6 @@
         margin-right: auto;
         box-shadow: 0 0 0 1px #dcdfe6;
         border-radius: 2px;
+        padding-bottom: 250px;
     }
 </style>

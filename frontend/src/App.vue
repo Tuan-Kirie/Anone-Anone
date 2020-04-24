@@ -173,6 +173,8 @@
         justify-content: flex-start;
         border-bottom: solid 1px rgba(0, 0, 0, .32);
     }
+
+
     #nav > a {
         color: rgba(0, 0, 0, 0.87);
         text-decoration: none;
@@ -251,6 +253,26 @@
     ::selection {
         background-color: #cce2ff;
         color: rgba(0, 0, 0, .87);
+    }
+    @media screen and (min-width: 130px) and (max-width:650px) {
+        #app {
+            overflow: hidden;
+        }
+        #nav {
+            justify-content: flex-start;
+        }
+        #nav > a {
+            margin-left: 3%;
+        }
+        #nav > *:before {
+            display: none;
+        }
+        .logo {
+            display: none;
+        }
+        .profile-mini {
+            right: 3%;
+        }
     }
 </style>
 

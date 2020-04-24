@@ -8,7 +8,7 @@ class PostAdminForm(forms.ModelForm):
 
     class Meta:
         model = Blog
-        fields = ['author', 'text', 'published_date']
+        fields = ['name','author', 'text', 'published_date']
 
 
 class PostAdmin(admin.ModelAdmin):

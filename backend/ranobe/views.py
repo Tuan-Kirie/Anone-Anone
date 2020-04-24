@@ -21,7 +21,7 @@ class RanobeList(ListAPIView):
     serializer_class = RanobeSerializer
     permission_classes = [permissions.BasePermission]
     filter_backends = [filters.SearchFilter, DjangoFilterBackend]
-    search_fields = ['name']
+    search_fields = ['name',]
     pagination_class = StandardPaginationRanobe
     filterset_class = RanobeFilter
 

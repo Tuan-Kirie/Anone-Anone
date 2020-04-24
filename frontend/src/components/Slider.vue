@@ -21,6 +21,27 @@
                 </div>
             </swiper-slide>
         </swiper>
+        <div class="name-header">
+            <h3>Популярное</h3>
+        </div>
+        <swiper class="swiper" :options="swiperOption">
+            <swiper-slide v-for="(slide, index) in slider_content_l" :key="slide.name + (index)" class="ranobe-container">
+                <div class="ranobe-image-cont">
+                    <router-link class="ran-link"
+                                 :to="{ name: 'RanobeDetail', params: { ranobeId: slide.id }}">
+                        <img class="ranobe-img" v-bind:src="slide.image" alt=""
+                             v-if="slide.adult_status === false">
+                        <img class="ranobe-img-adult" v-bind:src="slide.image" alt="" v-else>
+                    </router-link>
+                    <div class="ranobe-header">
+                        <span class="ranobe-name">{{slide.name}}</span>
+                        <span class="ranobe-alternate-n"
+                              v-if="slide.alternate_name">{{slide.alternate_name}}</span>
+                        <span class="ranobe-alternate-n" v-else> </span>
+                    </div>
+                </div>
+            </swiper-slide>
+        </swiper>
     </div>
 </template>
 
@@ -41,8 +62,9 @@
         data() {
             return {
                 slider_content: [],
+                slider_content_l: [],
                 swiperOption: {
-                    slidesPerView: 6,
+                    slidesPerView: 6 ,
                     slidesPerGroup: 6,
                     spaceBetween: 30,
                     // centeredSlides: true,
@@ -62,10 +84,17 @@
                     }).catch(er => {
                     console.log(er)
                 })
+            },
+            getRanobesWithLikes() {
+                let url = 'http://127.0.0.1:8000/ranobe/?likes=1'
+                axios.get(url).then(resp => {
+                    this.slider_content_l = resp.data.results
+                }).catch(er => console.log(er))
             }
         },
         mounted() {
-            this.getRanobes()
+            this.getRanobes();
+            this.getRanobesWithLikes();
         }
     }
 </script>
@@ -74,16 +103,19 @@
     .name-header {
         display: inline-flex;
     }
+
     .name-header > h3 {
         font-size: 1.5em;
         font-weight: 400;
     }
+
     .name-header > h3:before {
         color: #4183c4;
-        content:'#';
+        content: '#';
         padding-left: 10px;
         padding-right: 5px;
     }
+
     .swiper {
         height: auto;
         width: 100%;

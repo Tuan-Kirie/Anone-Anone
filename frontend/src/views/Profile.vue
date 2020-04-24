@@ -28,16 +28,16 @@
                             <h3>Информация</h3>
                         </div>
                         <div class="block-info">
-                            <span>Имя - {{name}}</span>
+                            <span id="username">{{name}}</span>
                             <span id="birth" title="Редактирвоать"
-                                  @click="toShow.birth_edit_button = !toShow.birth_edit_button">Дата рождения - {{birth}} </span>
+                                  @click="toShow.birth_edit_button = !toShow.birth_edit_button">{{birth}} </span>
                             <transition name="button-shower">
                                 <div v-show="toShow.birth_edit_button"><input v-model="birth_input" type="date"
                                                                               min="1950-01-01">
                                     <button @click="editBirthDate" class="button">Отправить</button>
                                 </div>
                             </transition>
-                            <span>Email - {{email}}</span>
+                            <span id="email">{{email}}</span>
                         </div>
                     </div>
                     <div class="profile-statistic">
@@ -356,7 +356,18 @@
 </script>
 
 <style scoped>
-
+    #username::before{
+        content: "Имя: ";
+        font-weight: bolder;
+    }
+    #email::before  {
+        content: 'E-mail: ';
+        font-weight: bolder;
+    }
+    #birth::before {
+        content: 'Дата рождения: ';
+        font-weight: bolder;
+    }
     #birth::after {
         display: none;
         background: url("http://127.0.0.1:8080/edit.svg") no-repeat;
@@ -586,6 +597,9 @@
         display: flex;
         width: 100%;
         justify-content: space-between;
+    }
+    .block-info > span {
+
     }
 
     .block-info > div > input {
