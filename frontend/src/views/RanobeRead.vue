@@ -119,6 +119,7 @@
                             this.selectedChapter.id = resp.data.id
                             this.selectedChapter.name = resp.data.chapter_name;
                             this.selectedChapter.text = resp.data.text
+                            this.show_menu = false
                             this.checkBtn()
                         }).catch(er => console.log(er))
                 }
@@ -218,18 +219,16 @@
 </script>
 
 <style scoped>
+
     .open {
         margin-left: 10px;
         margin-right: 10px;
     }
-
     .prev-page {
     }
     .prev-page.disable:hover, .next-page.disable:hover {
-        background-color: rgba(255, 0, 0, 0.11 );
+        background-color: rgba(255, 0, 0, 0.11);
     }
-
-
     .read-container {
         padding: 1em;
         width: 95%;
@@ -237,7 +236,6 @@
         margin-left: auto;
         margin-top: 15px;
     }
-
     .chapter-nav {
         display: flex;
         margin-bottom: 15px;
@@ -246,51 +244,39 @@
         align-items: center;
         padding: 5px;
     }
-
     .chapter-nav > div {
         cursor: pointer;
         padding: 5px;
         height: 100%;
         display: flex;
         align-items: center;
-
     }
-
     .chapter-nav > div:hover {
         border-radius: 5px;
         background-color: #b9b9b9;
     }
-
     .chapter-content {
         margin-bottom: 15px;
         padding: 1em;
         background: #FFFFFF;
     }
-
     .chapter-name {
-
     }
-
     .chapter-nav {
         display: inline-flex;
         width: 100%;
         justify-content: center;
-
     }
-
     .open {
         padding-left: 10px;
         padding-right: 10px;
     }
-
     .chapterMenu-enter-active, .chapterMenu-leave-active {
         transition: opacity .5s;
     }
-
     .chapterMenu-enter, .chapterMenu-leave-to {
         opacity: 0;
     }
-
     .chapter-menu {
         position: fixed;
         left: 0;
@@ -303,50 +289,58 @@
         width: 300px;
         overflow: scroll;
     }
-
     .chapter-menu > h4 {
         width: 100%;
         text-align: center;
         border-bottom: 1px solid #3c3c3c;
         padding-bottom: 4px;
     }
-
     .chapter-container {
         height: 100%;
         overflow: auto;
         display: flex;
         flex-direction: column;
     }
-
     .search-chapter {
         min-width: 100%;
         padding-bottom: 10px;
         border-bottom: 1px solid #3c3c3c;
     }
-
     .search-chapter > input {
         min-width: 95%;
         height: 30px;
         padding-left: 6px;
     }
-
     .chapter-container > a {
         min-width: 100%;
         min-height: 30px;
         padding-left: 3px;
     }
-
     .chapter-container > a:hover {
         color: #4183c4;
         cursor: pointer;
     }
-
     .chapter-container > a > span {
         text-overflow: ellipsis;
         display: block;
         width: 280px;
         overflow: hidden;
         white-space: nowrap;
+    }
+    @media screen and (min-width: 130px) and (max-width: 650px) {
+        .chapter-nav > div {
+            font-size: 14px;
+            text-align: center;
+        }
+        .read-container {
+            padding: 0;
+        }
+        .chapter-nav {
+            width: 100%;
+            padding: 0;
+            margin: 0 auto 13px;
+         }
+
     }
 
 </style>
