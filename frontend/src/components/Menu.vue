@@ -1,67 +1,71 @@
 <template>
-    <div class="menu">
-        <div class="menu-container">
-            <div class="menu-header">
-                <span>Фильтры</span>
-            </div>
-            <div class="menu-content">
-                <div class="adult-status">
-                    <span>Для взрослых</span>
-                    <input type="checkbox" v-model="adult" id="checkbox">
+    <div>
+        <div id="menu" class="menu">
+            <div class="menu-container">
+                <div class="menu-header">
+                    <span>Фильтры</span>
                 </div>
-                <div class="genres">
-                    <span @click="getGenres" class="meta-text">Жанры <div class="counter-meta">{{this.choosed_genres.length}}</div></span>
-                    <div class="choosed-list">
-                        <div class="choosed-meta" v-for="(genre, index) in choosed_genres_meta" :key="index"
-                             @click="removeChoosedGenre(genre)">
-                            <span>{{genre}}</span>
-                            <img src="http://127.0.0.1:8080/remove.svg" alt="">
+                <div class="menu-content">
+                    <div class="adult-status">
+                        <span>Для взрослых</span>
+                        <input type="checkbox" v-model="adult" id="checkbox">
+                    </div>
+                    <div class="genres">
+                        <span @click="getGenres" class="meta-text">Жанры <div class="counter-meta">{{this.choosed_genres.length}}</div></span>
+                        <div class="choosed-list">
+                            <div class="choosed-meta" v-for="(genre, index) in choosed_genres_meta" :key="index"
+                                 @click="removeChoosedGenre(genre)">
+                                <span>{{genre}}</span>
+                                <img src="http://127.0.0.1:8080/remove.svg" alt="">
+                            </div>
+                        </div>
+                        <transition name="filter">
+                            <input type="text" v-show="genres_show" placeholder="Введите жанры"
+                                   v-model="genres_input" @input="searchGenres">
+                        </transition>
+                        <div class="meta-list-container" v-show="genres_show">
+                            <div class="genres-list" v-for="genre in genres" :key="genre.id"
+                                 @click="addGenreToSearch(genre.id, genre.genre)">{{genre.genre}}
+                            </div>
                         </div>
                     </div>
-                    <transition name="filter">
-                        <input type="text" v-show="genres_show" placeholder="Введите жанры"
-                               v-model="genres_input" @input="searchGenres">
-                    </transition>
-                    <div class="meta-list-container" v-show="genres_show">
-                        <div class="genres-list" v-for="genre in genres" :key="genre.id"
-                             @click="addGenreToSearch(genre.id, genre.genre)">{{genre.genre}}
-                        </div>
-                    </div>
-                </div>
-                <div class="tags">
+                    <div class="tags">
                     <span @click="getTags" class="meta-text">Теги <div
                             class="counter-meta">{{this.choosed_tags.length}}</div></span>
-                    <div class="choosed-list">
-                        <div class="choosed-meta" v-for="(tag, index) in choosed_tags_meta" :key="index"
-                             @click="removeChoosedTags(tag)">
-                            <span>{{tag}}</span>
-                            <img src="http://127.0.0.1:8080/remove.svg" alt="">
+                        <div class="choosed-list">
+                            <div class="choosed-meta" v-for="(tag, index) in choosed_tags_meta" :key="index"
+                                 @click="removeChoosedTags(tag)">
+                                <span>{{tag}}</span>
+                                <img src="http://127.0.0.1:8080/remove.svg" alt="">
+                            </div>
+                        </div>
+                        <transition name="filter">
+                            <input type="text" v-show="tags_show" placeholder="Введите теги" v-model="tags_input"
+                                   @input="searchTags">
+                        </transition>
+                        <div class="meta-list-container" v-show="tags_show">
+                            <div class="genres-list" v-for="tag in tags" :key="tag.id"
+                                 @click="addTagToSearch(tag.id, tag.tag)">
+                                {{tag.tag}}
+                            </div>
                         </div>
                     </div>
-                    <transition name="filter">
-                        <input type="text" v-show="tags_show" placeholder="Введите теги" v-model="tags_input"
-                               @input="searchTags">
-                    </transition>
-                    <div class="meta-list-container" v-show="tags_show">
-                        <div class="genres-list" v-for="tag in tags" :key="tag.id"
-                             @click="addTagToSearch(tag.id, tag.tag)">
-                            {{tag.tag}}
+                    <div class="clear-button">
+                        <div class="clear">
+                            <span @click="clearFilter">Сбросить все фильтры</span>
                         </div>
-                    </div>
-                </div>
-                <div class="clear-button">
-                    <div class="clear">
-                        <span @click="clearFilter">Сбросить все фильтры</span>
                     </div>
                 </div>
             </div>
+        </div>
+        <div class="menu-show-button" @click="showHideMenu">
+
         </div>
     </div>
 </template>
 <style scoped>
     .choosed-list {
         width: 100%;
-
     }
     .choosed-meta img {
         content: " ";
@@ -198,12 +202,11 @@
         align-items: center;
     }
     .menu {
-        width: 20%;
-
+        width: 150%;
+        position: sticky;
+        top: 7em;
     }
     .menu-container {
-        position: sticky;
-        top: 4em;
         margin-top: 75px;
         width: 98%;
         min-height: 260px;
@@ -215,9 +218,7 @@
         text-align: center;
         align-items: center;
         overflow-x: scroll;
-
         /*overflow-scrolling: auto;*/
-
     }
     .menu-header {
         margin-top: 10px;
@@ -225,7 +226,6 @@
         border-bottom: 1px solid #cecece;
     }
     .menu-right > span {
-
     }
     .filter-enter-active {
         transition: all .3s ease;
@@ -237,7 +237,35 @@
         opacity: 0;
         transform: translateY(14px);
     }
-
+    .menu-show-button {
+        display: none;
+        width: 0;
+    }
+    @media screen and (min-width: 130px) and (max-width: 650px) {
+        .menu-show-button {
+            display: block;
+            position: fixed;
+            background-color: white;
+            left: 0;
+            top: 70%;
+            width: 7%;
+            height: 8%;
+            border-top-right-radius: 50%;
+            border-bottom-right-radius: 50%;
+            text-align: center;
+            vertical-align: middle;
+            border: 1px solid #cecece
+        }
+        .menu {
+            position: fixed;
+            right: -200px;
+            width: 200px;
+        }
+        .menu-content {
+            overflow: hidden;
+            overflow-scrolling: auto;
+        }
+    }
 </style>
 <script>
     import axios from 'axios'
@@ -258,9 +286,20 @@
                 choosed_genres: [],
                 choosed_tags_meta: [],
                 choosed_genres_meta: [],
+                show_menu: false,
             }
         },
         methods: {
+            showHideMenu() {
+                let elem = document.getElementById('menu')
+                if (this.show_menu) {
+                    elem.style.right = '-200px'
+                    this.show_menu = false
+                } else {
+                    elem.style.right = 0 + 'px'
+                    this.show_menu = true
+                }
+            },
             clearFilter() {
                 this.genres_show = false;
                 this.tags_show = false;

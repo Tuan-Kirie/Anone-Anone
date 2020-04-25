@@ -356,11 +356,11 @@
 </script>
 
 <style scoped>
-    #username::before{
+    #username::before {
         content: "Имя: ";
         font-weight: bolder;
     }
-    #email::before  {
+    #email::before {
         content: 'E-mail: ';
         font-weight: bolder;
     }
@@ -378,33 +378,26 @@
         float: right;
         padding-right: 30px;
     }
-
     #birth:hover {
         background-color: #f3f3f3;
         cursor: pointer;
     }
-
     #birth:hover::after {
         display: block
     }
-
     .ranobe-name > span {
         color: black;
     }
-
     /*Delete router-link text decoration*/
     a {
         text-decoration: none;
     }
-
     .ranobe-filter {
         margin-top: 10px;
         display: inline-flex;
         width: 100%;
         justify-content: space-around;
-
     }
-
     .ranobe-filter > div {
         width: 150px;
         line-height: 30px;
@@ -415,28 +408,22 @@
         text-align: center;
         border: 1px solid #e5e5e5;
     }
-
     .ranobe-filter > div.active {
         box-shadow: 0 1px 1px 1px rgba(0, 0, 0, .1), 0 0 1px 1px #3c82e6;
-
     }
-
     .ranobe-filter > div:hover {
         /*-webkit-box-shadow: 1px 0px 8px 0px rgba(0,0,0,0.75);*/
         /*-moz-box-shadow: 1px 0px 8px 0px rgba(0,0,0,0.75);*/
         /*box-shadow: 1px 0px 8px 0px rgba(0,0,0,0.75);*/
     }
-
     .comment-simple-menu {
         width: available;
         max-lines: 1;
         line-height: 20px;
     }
-
     .comment-simple-menu > span {
         font-weight: bolder;
     }
-
     .comment {
         margin-top: 10px;
         overflow: hidden;
@@ -447,14 +434,12 @@
         display: inline-flex;
         justify-content: space-between;
     }
-
     .comment-text-container {
         padding: 10px 5px 10px 15px;
         width: available;
         overflow: hidden;
         height: auto;
     }
-
     .comment-text {
         font-size: small;
         padding: 5px;
@@ -464,44 +449,35 @@
         max-height: 80px;
         overflow: hidden;
         text-overflow: ellipsis;
-
     }
-
     .ranobe-shortcut {
         height: 100%;
         max-width: 30%;
     }
-
     .ranobe-shortcut.image {
         object-fit: cover;
-
         max-width: 30%;
         height: 150px;
     }
-
     .ranobe-shortcut.image > img {
         width: auto;
         height: 100%;
     }
-
     .ranobe-info {
         margin-left: 10px;
         height: 100%;
     }
-
     .ranobe-img {
         object-fit: cover;
         border-radius: 5px;
         border: 1px solid #cecece;
     }
-
     .ranobe-img > img {
         display: block;
         height: auto;
         width: 110px;
         max-height: 150px;
     }
-
     .content {
         margin-top: 20px;
         padding: 0 20px 6px 0;
@@ -512,54 +488,49 @@
         border-bottom: 1px solid #e1e1e1;
         cursor: pointer;
     }
-
     .content:hover {
         -webkit-box-shadow: 4px 0 8px 8px rgba(214, 214, 214, 1);
         -moz-box-shadow: 4px 0 8px 8px rgba(214, 214, 214, 1);
         box-shadow: 4px 0 8px 8px rgba(214, 214, 214, 1);
     }
-
     .ranobe-container {
         width: 100%;
         height: auto;
         display: flex;
     }
-
     .profile-container {
         width: 100%;
-        max-width: 100%;
-        max-height: 100%;
+        /*max-width: 100%;*/
+        /*max-height: 100%;*/
         overflow: hidden;
         background: #eeeeee;
         height: auto;
-        display: grid;
-        grid-template-areas: "prof-cont prof-cont";
-        grid-template-rows: 0.3fr 1fr;
-        grid-row-gap: 10px;
-        grid-column-gap: 22px;
+        /*display: grid;*/
+        /*grid-template-areas: "prof-cont prof-cont";*/
+        /*grid-template-rows: 0.3fr 1fr;*/
+        /*grid-row-gap: 10px;*/
+        /*grid-column-gap: 22px;*/
+        display: flex;
+        margin-right: auto;
+        margin-left: auto;
     }
-
-    .user-header {
+     .user-header {
         width: 100%;
         max-height: 450px;
         object-fit: cover;
     }
-
     .img-container > a > img {
         width: 100%;
         height: auto;
     }
-
     .info-container {
-        grid-area: prof-cont;
+        width: 100%;
     }
-
     .profile-shortcuts {
         margin-top: 40px;
         display: flex;
-        justify-content: space-around;
+        justify-content: center;
     }
-
     .profile-statistic {
         width: 285px;
         background: #FFFFFF;
@@ -567,7 +538,6 @@
         border-radius: 2px;
         margin-bottom: 15px;
     }
-
     .block-name {
         overflow: hidden;
         height: 44px;
@@ -579,19 +549,17 @@
         padding: 0 10px 10px;
         border-bottom: solid 2px #40abe9;
     }
-
     .info-column {
         width: 285px;
         display: flex;
         flex-direction: column;
-    }
 
+    }
     .block-info {
         padding: 10px;
         display: flex;
         flex-direction: column;
     }
-
     .block-info > div {
         margin-top: 10px;
         display: flex;
@@ -599,9 +567,7 @@
         justify-content: space-between;
     }
     .block-info > span {
-
     }
-
     .block-info > div > input {
         padding-left: 5px;
         border: 1px solid #3c3c3c;
@@ -609,12 +575,10 @@
         cursor: pointer;
         width: available;
     }
-
     .button {
         margin-left: 5px;
         padding: 5px 10px;
     }
-
     .button {
         position: relative;
         background-color: #4CAF50;
@@ -627,7 +591,6 @@
         overflow: hidden;
         cursor: pointer;
     }
-
     .button:after {
         content: "";
         background: #f1f1f1;
@@ -640,66 +603,55 @@
         opacity: 0;
         transition: all 0.8s
     }
-
     .button:active:after {
         padding: 0;
         margin: 0;
         opacity: 1;
         transition: 0s
     }
-
-
     .block-info > * {
         margin-top: 3px;
     }
-
     .profile-info {
         background: #FFFFFF;
         padding: 20px;
         box-shadow: 0 0 0 1px #dcdfe6;
         border-radius: 2px;
         width: 900px;
-    }
+        margin-left: 50px;
 
+    }
     .profile-menu-list {
         width: 100%;
         height: 40px;
         border-bottom: 2px solid rgba(34, 36, 38, .15);
         display: flex;
     }
-
     .profile-menu-list > * {
         cursor: pointer;
         margin-right: 20px;
     }
-
     .profile-menu-list > div {
         height: 100%;
     }
-
     .profile-menu-list > .active {
         font-weight: bold;
         border-bottom: 2px solid #1b1c1d;
     }
-
     .profile-menu-list > div:hover {
         border-bottom: 2px solid #1b1c1d;
         color: rgba(0, 0, 0, .95);
     }
-
     .button-shower-enter-active {
         transition: all .3s ease;
     }
-
     .button-shower-leave-active {
         transition: all .3s cubic-bezier(1.0, 0.5, 0.8, 1.0);
     }
-
     .button-shower-enter, .button-shower-leave-to {
         opacity: 0;
         transform: translateY(14px);
     }
-
     /* свойства модального окна по умолчанию */
     .modal {
         position: fixed; /* фиксированное положение */
@@ -717,28 +669,24 @@
         margin: 0;
         padding: 0;
     }
-
     /* при отображении модального окно */
     .modal:target {
         opacity: 1; /* делаем окно видимым */
         pointer-events: auto; /* элемент видим для событий мыши */
         overflow-y: auto; /* добавляем прокрутку по y, когда элемент не помещается на страницу */
     }
-
     /* ширина модального окна и его отступы от экрана */
     .modal-dialog {
         position: relative;
         width: auto;
         margin: 10px;
     }
-
     @media (min-width: 576px) {
         .modal-dialog {
             max-width: 500px;
             margin: 30px auto; /* для отображения модального окна по центру */
         }
     }
-
     /* свойства для блока, содержащего контент модального окна */
     .modal-content {
         position: relative;
@@ -758,14 +706,52 @@
         border-radius: .3rem;
         outline: 0;
     }
-
     @media (min-width: 768px) {
         .modal-content {
             -webkit-box-shadow: 0 5px 15px rgba(0, 0, 0, .5);
             box-shadow: 0 5px 15px rgba(0, 0, 0, .5);
         }
     }
-
+    @media screen and (min-width: 130px) and (max-width: 650px) {
+        .info-container {
+            max-width: 100%;
+            overflow: hidden;
+        }
+        .profile-shortcuts {
+            flex-direction: column;
+        }
+        .info-column {
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .profile-container {
+            grid-template-columns: 1fr;
+        }
+        .profile-info {
+            margin: 0 auto;
+            justify-self: center;
+            padding: 3px;
+            width: 90%;
+            max-width: 90%;
+        }
+        .ranobe-filter> *{
+            font-size: 12px;
+        }
+        .ranobe-filter > div {
+            width: auto;
+            padding: 0 10px 0 10px;
+        }
+        .profile-menu-list{
+            height: 50px;
+        }
+        .profile-menu-list > div {
+            text-align: center;
+            line-height: 50px;
+        }
+        .profile-menu-list:first-child {
+            padding-left: 10px;
+        }
+    }
     /* свойства для заголовка модального окна */
     .modal-header {
         display: -webkit-box;
@@ -783,7 +769,6 @@
         padding: 15px;
         border-bottom: 1px solid #eceeef;
     }
-
     .modal-title {
         margin-top: 0;
         margin-bottom: 0;
@@ -791,7 +776,6 @@
         font-size: 1.25rem;
         font-weight: 500;
     }
-
     /* свойства для кнопки "Закрыть" */
     .close {
         float: right;
@@ -804,7 +788,6 @@
         opacity: .5;
         text-decoration: none;
     }
-
     /* свойства для кнопки "Закрыть" при нахождении её в фокусе или наведении */
     .close:focus, .close:hover {
         color: #000;
@@ -812,7 +795,6 @@
         cursor: pointer;
         opacity: .75;
     }
-
     /* свойства для блока, содержащего основное содержимое окна */
     .modal-body {
         position: relative;
@@ -823,8 +805,6 @@
         padding: 15px;
         overflow: auto;
     }
-
     .modal-body > button {
-
     }
 </style>
