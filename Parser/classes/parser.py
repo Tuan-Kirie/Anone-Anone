@@ -142,7 +142,7 @@ class ChapterPage:
 
 class ImageParse:
     def __init__(self, id, img_url):
-        self.abs_path = "C:\\Users\\Cinnabar\\Programming\\Anone-Anone\\backend\\media\\ranobe"
+        self.abs_path = "C:\\Programming\\Anone-Anone\\backend\\media\\ranobe"
         self.id = id
         self.url = img_url
 

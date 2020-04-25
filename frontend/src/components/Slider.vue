@@ -64,8 +64,8 @@
                 slider_content: [],
                 slider_content_l: [],
                 swiperOption: {
-                    slidesPerView: 6 ,
-                    slidesPerGroup: 6,
+                    slidesPerView: document.documentElement.clientWidth  > 600 ? 6: 2,
+                    slidesPerGroup: document.documentElement.clientWidth  > 600 ? 6: 2,
                     spaceBetween: 30,
                     // centeredSlides: true,
                     autoplay: {
@@ -90,7 +90,7 @@
                 axios.get(url).then(resp => {
                     this.slider_content_l = resp.data.results
                 }).catch(er => console.log(er))
-            }
+            },
         },
         mounted() {
             this.getRanobes();
