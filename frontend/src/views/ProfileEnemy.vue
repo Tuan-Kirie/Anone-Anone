@@ -17,7 +17,7 @@
         </div>
         <div class="right-column">
             <div class="ranobes-container">
-                <span class="elem-name">#Список ранобэ</span>
+                <span class="elem-name">Список ранобэ</span>
                 <div class="ranobe-filter">
                     <div v-bind:class="{active: isActive.all}" @click="getMarkedRanobes(); contentActivator(0)">
                         <span>Все</span></div>
@@ -115,10 +115,10 @@
                     })
             },
             contentActivator(type) {
-                this.isActive.all = (type === 0) ? true : false;
-                this.isActive.planned = (type === 1) ? true : false;
-                this.isActive.reading = (type === 2) ? true : false;
-                this.isActive.read = (type === 3) ? true : false;
+                this.isActive.all = (type === 0);
+                this.isActive.planned = (type === 1);
+                this.isActive.reading = (type === 2);
+                this.isActive.read = (type === 3);
 
             },
         },
@@ -138,7 +138,6 @@
         color: black;
         font-size: larger;
     }
-
     .ranobe-container {
         width: 100%;
         height: auto;
@@ -148,6 +147,12 @@
         display: block;
         padding: 25px 0 10px 25px;
         font-size: larger;
+    }
+    .elem-name:before {
+        color: #4183c4;
+        content: '#';
+        padding-left: 10px;
+        padding-right: 5px;
     }
     .ranobe-info {
         margin-left: 10px;
@@ -171,25 +176,26 @@
         overflow: hidden;
         background: #eeeeee;
         height: auto;
-        display: grid;
-        grid-template-areas: "prof-cont-l prof-cont-r";
-        grid-template-columns: 0.3fr 1fr;
-        grid-template-rows: 1fr;
-        grid-row-gap: 10px;
+        display: flex;
+        justify-content: center;
+        /*display: grid;*/
+        /*grid-template-areas: "prof-cont-l prof-cont-r";*/
+        /*grid-template-columns: 0.3fr 1fr;*/
+        /*grid-template-rows: 1fr;*/
+        /*grid-row-gap: 10px;*/
         padding-bottom: 100px;
-        grid-column-gap: 22px;
+        /*grid-column-gap: 22px;*/
     }
     .left-column {
         height: auto;
         margin-top: 50px;
-        grid-area: prof-cont-l;
+        /*grid-area: prof-cont-l;*/
         box-shadow: 0 0 0 1px #dcdfe6;
         max-width: 300px;
         margin-left: 50px;
         background-color: white;
         max-height: 560px;
     }
-
     .fixed-container {
         height: 500px;
         position: sticky;
@@ -201,12 +207,12 @@
         width: 100%;
     }
     .right-column {
-        margin-top: 50px;
-        grid-area: prof-cont-r;
+        margin: 50px;
+        /*grid-area: prof-cont-r;*/
         background-color: white;
-        margin-right: 50px;
+        max-width: 900px;
         box-shadow: 0 0 0 1px #dcdfe6;
-
+        padding-bottom: 50px;
     }
     .block-name {
         overflow: hidden;
@@ -232,7 +238,6 @@
         display: inline-flex;
         width: 100%;
         justify-content: space-around;
-
     }
     .ranobe-filter > div {
         width: 150px;
@@ -246,7 +251,6 @@
     }
     .ranobe-filter > div.active {
         box-shadow: 0 1px 1px 1px rgba(0, 0, 0, .1), 0 0 1px 1px #3c82e6;
-
     }
     .content {
         margin-top: 30px;
@@ -262,10 +266,58 @@
         border-radius: 5px;
     }
     .content:hover {
-        /*-webkit-box-shadow: 4px 0 8px 8px rgba(214, 214, 214, 1);*/
-        /*-moz-box-shadow: 4px 0 8px 8px rgba(214, 214, 214, 1);*/
-        /*box-shadow: 4px 0 8px 8px rgba(214, 214, 214, 1);*/
         background-color: #f6f6f6;
         box-shadow: 0 0 0 1px rgba(214, 214, 214, 1);
+    }
+    @media screen and (min-width: 130px) and (max-width: 650px) {
+        .left-column, .right-column {
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .ranobe-filter > * {
+            font-size: 12px;
+        }
+        .ranobe-filter > div {
+            width: auto;
+            padding: 0 10px 0 10px;
+        }
+        .profile-menu-list > div {
+            text-align: center;
+            line-height: 50px;
+        }
+        .profile-container {
+            display: flex;
+            flex-direction: column;
+        }
+        .block-info {
+            background-color: white;
+            padding-bottom: 15px;
+        }
+        .right-column {
+            margin-top: 100px;
+            padding-bottom: 100px;
+        }
+        .content {
+            overflow: hidden;
+        }
+        .ranobe-name {
+            padding: 0 5px 0 5px;
+            font-size: 13px;
+        }
+        .ranobe-container {
+            overflow: hidden;
+            max-height: 100%;
+        }
+        .content > a {
+            max-height: 100%;
+            overflow: hidden;
+        }
+        .ranobe-info {
+            max-height: 100%;
+            overflow: hidden;
+        }
+        .elem-name {
+            padding-left: 10px;
+        }
     }
 </style>
