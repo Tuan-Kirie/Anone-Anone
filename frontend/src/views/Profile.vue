@@ -617,7 +617,9 @@
         padding: 20px;
         box-shadow: 0 0 0 1px #dcdfe6;
         border-radius: 2px;
-        width: 900px;
+        /*width: 900px;*/
+        width: 65%;
+        max-width: 85%;
         margin-left: 50px;
 
     }
@@ -712,7 +714,7 @@
             box-shadow: 0 5px 15px rgba(0, 0, 0, .5);
         }
     }
-    @media screen and (min-width: 130px) and (max-width: 650px) {
+    @media screen and (min-width: 320px) and (max-width: 650px) {
         .info-container {
             max-width: 100%;
             overflow: hidden;
@@ -747,10 +749,15 @@
         .profile-menu-list > div {
             text-align: center;
             line-height: 50px;
+            width: auto;
         }
+
         .profile-menu-list:first-child {
             padding-left: 10px;
         }
+    }
+    @media screen and (min-width: 320px) and (max-width: 650px) {
+
     }
     /* свойства для заголовка модального окна */
     .modal-header {

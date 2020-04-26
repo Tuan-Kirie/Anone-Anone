@@ -7,8 +7,7 @@ class RanobeFilter(django_filters.FilterSet):
     genres = django_filters.ModelMultipleChoiceFilter(field_name='genres', conjoined=True,
                                                       queryset=Genres.objects.all())
     adult = django_filters.BooleanFilter(field_name='adult_status')
-    likes = django_filters.NumberFilter(field_name='ranobelikes', lookup_expr='gte')
 
     class Meta:
         model = Ranobe
-        fields = ['tags', 'genres', 'adult', 'likes']
+        fields = ['tags', 'genres', 'adult']

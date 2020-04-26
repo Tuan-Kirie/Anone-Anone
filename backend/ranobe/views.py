@@ -1,3 +1,4 @@
+from django.db.models import Count
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.generics import *
 from rest_framework.pagination import PageNumberPagination
@@ -21,7 +22,7 @@ class RanobeList(ListAPIView):
     serializer_class = RanobeSerializer
     permission_classes = [permissions.BasePermission]
     filter_backends = [filters.SearchFilter, DjangoFilterBackend]
-    search_fields = ['name',]
+    search_fields = ['name', ]
     pagination_class = StandardPaginationRanobe
     filterset_class = RanobeFilter
 
@@ -87,3 +88,9 @@ class GenresView(ListAPIView):
     filter_backends = [filters.SearchFilter]
     search_fields = ['genre']
     pagination_class = TagsGenresPagination
+
+
+class RanobeListLikesView(ListAPIView):
+    queryset = Ranobe.objects.filter().annotate(popular=Count('ranobelikes__like')).order_by('ranobelikes__like')
+    serializer_class = RanobeSerializer
+    permission_classes = [permissions.BasePermission]
