@@ -47,7 +47,6 @@
         width: 0;
         top: 60px;
     }
-
     .sticky-go-top {
         transition: all ease .5s;
         position: fixed;
@@ -56,11 +55,9 @@
         width: 3%;
         height: 100%;
     }
-
     .sticky-go-top:hover {
         background: url('http://127.0.0.1:8080/up.svg') no-repeat center #d5d5d5;
     }
-
     .sticky-go-back {
         transition: all ease .5s;
         position: fixed;
@@ -69,34 +66,27 @@
         width: 3%;
         height: 100%;
     }
-
     .sticky-go-back:hover {
         background: url('http://127.0.0.1:8080/down.svg') no-repeat center #d5d5d5;
     }
-
     #ranobe-page {
         display: flex;
         flex-direction: row;
     }
-
     .content-hover-container {
         width: 80%;
     }
-
     .search {
         width: 80%;
         margin: 15px auto;
     }
-
     .ran-link {
         clear: both;
     }
-
     .search > form {
         width: 100%;
         height: 34px;
         display: inline-flex;
-
     }
     #clear-b {
         background-color: white;
@@ -113,17 +103,14 @@
         height: 100%;
         width: 100%;
     }
-
     .search-button {
         border: 1px solid #acadad;
         height: 111%;
         width: 30%;
     }
-
     .search-button:hover {
         transition: 0.3s ease;
     }
-
     .content {
         padding: 7px 7px;
         border-radius: 5px;
@@ -136,20 +123,18 @@
         grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
         grid-column-gap: 10px;
         grid-row-gap: 15px;
+        box-shadow: 0 0 1px 1px rgba(0, 0, 0, 0.1);
     }
-
     .ranobe-image-cont {
         max-height: 100%;
         min-height: 100%;
     }
-
     .ranobe-container:hover {
         transition: 0.3s ease;
         -webkit-transform: scale(1.05);
         -ms-transform: scale(1.05);
         transform: scale(1.05);
     }
-
     .ranobe-img {
         object-fit: cover;
         height: 100%;
@@ -158,7 +143,6 @@
         border-radius: 5px;
         border: 1px solid #cecece;
     }
-
     .ranobe-img-adult {
         object-fit: cover;
         height: 100%;
@@ -167,7 +151,6 @@
         border-radius: 5px;
         filter: blur(3px);
     }
-
     .ranobe-container {
         min-width: 97%;
         height: 280px;
@@ -175,14 +158,12 @@
         display: flex;
         flex-direction: column;
     }
-
     .ranobe-header {
         background: rgba(0, 0, 0, .8);
         position: relative;
         bottom: 19.5%;
         height: 60px;
     }
-
     .ranobe-header span {
         margin-left: 1.5%;
         margin-right: 1.5%;
@@ -194,7 +175,6 @@
         width: 97%;
         text-align: center;
     }
-
     /*.ranobe-refresh*/
     @media screen and (min-width: 130px) and (max-width: 650px) {
         .content-hover-container {
@@ -207,7 +187,7 @@
         }
         .content {
             padding-left: 0;
-            padding-right: 0    ;
+            padding-right: 0;
             margin-left: 0;
             width: 100%;
             grid-template-columns: 1fr 1fr;
@@ -216,7 +196,6 @@
             width: 100%;
             margin-left: auto;
             margin-right: auto;
-
         }
         .search > form > input {
             width: 60%;

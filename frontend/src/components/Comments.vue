@@ -255,7 +255,7 @@
 
     .comment-text {
         width: 100%;
-        padding: 5px 20px 5px 0px;
+        padding: 5px 20px 5px 0;
         margin-bottom: 30px;
         overflow: hidden;
         overflow-wrap: break-word;

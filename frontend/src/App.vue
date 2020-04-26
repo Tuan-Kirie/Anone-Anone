@@ -55,7 +55,7 @@
         min-width: 100%;
     }
     body {
-        background-color: rgba(0, 0, 0, .10);
+        background-color: #f9fafa;
         font-family: -apple-system, BlinkMacSystemFont, Open Sans, Roboto, Helvetica Neue, Helvetica, sans-serif;
     }
     .looklog-leave-active {
@@ -171,7 +171,8 @@
         font-size: 15px;
         align-items: center;
         justify-content: flex-start;
-        border-bottom: solid 1px rgba(0, 0, 0, .32);
+        /*border-bottom: solid 1px rgba(0, 0, 0, .32);*/
+        box-shadow:0  0  1px 1px rgba(0, 0, 0, 0.1);
     }
 
 
