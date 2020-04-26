@@ -13,7 +13,7 @@ from django.conf import settings
 from django.contrib.staticfiles.storage import staticfiles_storage
 from comments.views import CommentView, CommentCreateView, UpdateDestroyCommentView
 
-from ranobe.views import TagsView, GenresView
+from ranobe.views import TagsView, GenresView, RanobeListLikesView
 from blog.views import BlogListView, DetailBlogView
 
 urlpatterns = [
@@ -22,6 +22,7 @@ urlpatterns = [
     url(r'^api-token-auth/', obtain_jwt_token),
     url(r'^api-token-verify/', verify_jwt_token),
     path('ranobe/', RanobeList.as_view()),
+    path('ranobe/likes', RanobeListLikesView.as_view()),
     url(r'^ranobe/(?P<pk>[0-9]+)/$', RanobeDetailView.as_view()),
     url(r'^ranobe/(?P<pk>[0-9]+)/bookmark/$', BookmarkUpdateView.as_view()),
     url(r'^ranobe/(?P<pk>[0-9]+)/readstatus/$', BookStatusUpdateView.as_view()),
