@@ -202,7 +202,7 @@
         align-items: center;
     }
     .menu {
-        width: 150%;
+        width: 100%;
         position: sticky;
         top: 7em;
     }
@@ -288,6 +288,22 @@
             max-height: none;
         }
     }
+    @media screen and (max-width: 1000px) and (min-width: 650px){
+        .menu {
+            width: 100%;
+            top: 8.5em;
+        }
+        .menu-container {
+            margin-top: 35px;
+        }
+    }
+     @media screen and (min-width: 1000px) and (max-width: 1300px) {
+         .menu {
+            width: 100%;
+            top: 8.5em;
+        }
+     }
+
 </style>
 <script>
     import axios from 'axios'
