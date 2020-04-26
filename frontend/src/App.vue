@@ -275,6 +275,7 @@
             right: 3%;
         }
     }
+
 </style>
 
 <script>

@@ -207,6 +207,10 @@
             width: 20%;
         }
     }
+    @media screen and (max-width: 1000px) and (min-width: 651px) and (min-height: 350px) and (max-height: 600px){
+        
+    }
+
 </style>
 <script>
     import axios from 'axios'

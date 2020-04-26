@@ -59,7 +59,7 @@
             </div>
         </div>
         <div class="menu-show-button" @click="showHideMenu">
-
+            <span>Фильтры и сортировка</span>
         </div>
     </div>
 </template>
@@ -245,25 +245,47 @@
         .menu-show-button {
             display: block;
             position: fixed;
-            background-color: white;
-            left: 0;
-            top: 70%;
-            width: 7%;
-            height: 8%;
-            border-top-right-radius: 50%;
-            border-bottom-right-radius: 50%;
+            background-color: #e0e1e2;
             text-align: center;
+            padding-top: 10px;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            line-height: 1em;
+            height: 30px;
+            z-index: 668;
+            cursor: pointer;
+        }
+        .menu-show-button > span::before {
+            content: " ";
+            display: inline-block;
+            background: url("http://127.0.0.1:8080/settings.svg"), no-repeat;
+            width: 20px;
+            height: 20px;
+            background-size: 20px;
+            margin-right: 5px;
             vertical-align: middle;
-            border: 1px solid #cecece
+        }
+        .menu-show-button > span {
+            margin-bottom: 20px;
+            font-size: 20px;
+            color: rgba(0, 0, 0, .6);
+            font-weight: 700;
         }
         .menu {
+            display: none;
             position: fixed;
-            right: -200px;
-            width: 200px;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 667;
         }
-        .menu-content {
-            overflow: hidden;
-            overflow-scrolling: auto;
+        .menu-container {
+            margin: 0;
+            width: 100%;
+            height: 100%;
+            max-height: none;
         }
     }
 </style>
@@ -293,10 +315,10 @@
             showHideMenu() {
                 let elem = document.getElementById('menu')
                 if (this.show_menu) {
-                    elem.style.right = '-200px'
+                    elem.style.display = 'none'
                     this.show_menu = false
                 } else {
-                    elem.style.right = 0 + 'px'
+                    elem.style.display = 'block'
                     this.show_menu = true
                 }
             },
