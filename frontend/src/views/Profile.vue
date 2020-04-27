@@ -94,7 +94,7 @@
                                             <div class="comment-simple-menu">
                                                 <span>Текст комментария</span>
                                             </div>
-                                            <div class="comment-text">{{comment.text}}</div>
+                                            <div class="comment-text" v-html="comment.text"> </div>
                                         </div>
                                         <div class="ranobe-shortcut">
                                             <router-link class="ran-link"
@@ -619,7 +619,7 @@
         border-radius: 2px;
         /*width: 900px;*/
         width: 65%;
-        max-width: 85%;
+        max-width: 1300px;
         margin-left: 50px;
 
     }
@@ -714,7 +714,13 @@
             box-shadow: 0 5px 15px rgba(0, 0, 0, .5);
         }
     }
-    @media screen and (min-width: 320px) and (max-width: 650px) {
+    @media screen and (min-width: 320px) and (max-width: 760px) {
+        .ranobe-container {
+            overflow: hidden;
+            max-height: 150px;
+            text-overflow: ellipsis;
+            font-size: 13px;
+        }
         .info-container {
             max-width: 100%;
             overflow: hidden;
@@ -756,8 +762,14 @@
             padding-left: 10px;
         }
     }
-    @media screen and (min-width: 320px) and (max-width: 650px) {
+    @media screen and (min-width: 750px) and (max-width: 1200px) {
+        .profile-info {
+            max-width: 50%;
 
+        }
+        .ranobe-name {
+            font-size: 13px;
+        }
     }
     /* свойства для заголовка модального окна */
     .modal-header {
