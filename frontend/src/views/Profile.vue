@@ -60,7 +60,7 @@
                         <div v-bind:class="{active: isActive.comments}" @click="getProfileComments">
                             Комментарии
                         </div>
-                        <div v-bind:class="{active: isActive.ranobe}"
+                        <div id="ranobe-list-b" v-bind:class="{active: isActive.ranobe}"
                              @click="getProfileMarkedRanobes">
                             Список ранобэ
                         </div>
@@ -94,7 +94,7 @@
                                             <div class="comment-simple-menu">
                                                 <span>Текст комментария</span>
                                             </div>
-                                            <div class="comment-text" v-html="comment.text"> </div>
+                                            <div class="comment-text" v-html="comment.text"></div>
                                         </div>
                                         <div class="ranobe-shortcut">
                                             <router-link class="ran-link"
@@ -489,9 +489,8 @@
         cursor: pointer;
     }
     .content:hover {
-        -webkit-box-shadow: 4px 0 8px 8px rgba(214, 214, 214, 1);
-        -moz-box-shadow: 4px 0 8px 8px rgba(214, 214, 214, 1);
-        box-shadow: 4px 0 8px 8px rgba(214, 214, 214, 1);
+        background-color: #f6f6f6;
+        box-shadow: 0 0 0 1px rgba(214, 214, 214, 1);
     }
     .ranobe-container {
         width: 100%;
@@ -514,7 +513,7 @@
         margin-right: auto;
         margin-left: auto;
     }
-     .user-header {
+    .user-header {
         width: 100%;
         max-height: 450px;
         object-fit: cover;
@@ -553,12 +552,15 @@
         width: 285px;
         display: flex;
         flex-direction: column;
-
     }
     .block-info {
         padding: 10px;
         display: flex;
         flex-direction: column;
+    }
+    #email {
+        font-size: 14px;
+        white-space: nowrap;
     }
     .block-info > div {
         margin-top: 10px;
@@ -621,7 +623,6 @@
         width: 65%;
         max-width: 1300px;
         margin-left: 50px;
-
     }
     .profile-menu-list {
         width: 100%;
@@ -742,14 +743,14 @@
             width: 90%;
             max-width: 90%;
         }
-        .ranobe-filter> *{
+        .ranobe-filter > * {
             font-size: 12px;
         }
         .ranobe-filter > div {
             width: auto;
             padding: 0 10px 0 10px;
         }
-        .profile-menu-list{
+        .profile-menu-list {
             height: 50px;
         }
         .profile-menu-list > div {
@@ -757,15 +758,18 @@
             line-height: 50px;
             width: auto;
         }
-
         .profile-menu-list:first-child {
             padding-left: 10px;
+        }
+        #ranobe-list-b {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
     }
     @media screen and (min-width: 750px) and (max-width: 1200px) {
         .profile-info {
             max-width: 50%;
-
         }
         .ranobe-name {
             font-size: 13px;

@@ -17,7 +17,7 @@
         </div>
         <div class="right-column">
             <div class="ranobes-container">
-                <span class="elem-name">Список ранобэ</span>
+                <span id="ranobe-list-b" class="elem-name">Список ранобэ</span>
                 <div class="ranobe-filter">
                     <div v-bind:class="{active: isActive.all}" @click="getMarkedRanobes(); contentActivator(0)">
                         <span>Все</span></div>
@@ -274,6 +274,7 @@
             margin-left: auto;
             margin-right: auto;
         }
+
         .ranobe-filter > * {
             font-size: 12px;
         }
@@ -318,6 +319,22 @@
         }
         .elem-name {
             padding-left: 10px;
+        }
+    }
+    @media screen and (min-width: 750px) and (max-width: 1200px) {
+        .right-column {
+            max-width: 50%;
+
+        }
+        .ranobe-name {
+            font-size: 13px;
+        }
+        .ranobe-filter {
+            font-size: 0.9rem;
+        }
+        .ranobe-filter > div { 
+            width: auto;
+            padding: 0 10px 0 10px;
         }
     }
 </style>
