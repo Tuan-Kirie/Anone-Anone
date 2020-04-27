@@ -274,10 +274,11 @@
         }
         .menu {
             display: none;
-            position: fixed;
-            top: 0;
+            position: fixed!important;
             left: 0;
+            top: 0;
             width: 100%;
+            min-width: 150px;
             height: 100%;
             z-index: 667;
         }

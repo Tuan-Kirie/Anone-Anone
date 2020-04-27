@@ -36,7 +36,7 @@
             </transition>
         </div>
         <Menu @update="sync" @clear="getFirst" @disable="searchActiveDisable"
-              id="menu" v-bind:_filter="{tag: choosed_tag, genre: choosed_genre}"></Menu>
+              id="menu-block" v-bind:_filter="{tag: choosed_tag, genre: choosed_genre}"></Menu>
     </div>
 </template>
 <style scoped>
@@ -241,7 +241,7 @@
             left: 10%;
             right: 50%;
         }
-        #menu {
+        #menu-block {
             width: 30%;
             margin-right: 10px;
         }
@@ -256,7 +256,7 @@
             /*margin-top: 75px;*/
             grid-template-columns: 1fr 1fr 1fr 1fr;
         }
-          #menu {
+          #menu-block {
             width: 25%;
             margin-right: 10px;
         }
@@ -271,7 +271,7 @@
             /*margin-top: 75px;*/
             grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
         }
-          #menu {
+          #menu-block {
             max-width: 25%;
             margin-right: 10px;
             min-width: 250px;
