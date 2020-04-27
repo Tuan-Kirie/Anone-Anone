@@ -171,6 +171,7 @@
         border-bottom: 1px solid #cecece;
         margin-left: 10px;
         padding-bottom: 6px;
+        font-size: 15px;
     }
     .genres, .tags {
         display: flex;
@@ -181,10 +182,10 @@
         padding-bottom: 6px;
     }
     .genres > span, .tags > span {
+        font-size: 15px;
         margin-left: 3px;
         align-self: flex-start;
         margin-top: 5px;
-        font-size: 16px;
         padding: 3px 3px;
     }
     .genres > input, .tags > input {
@@ -202,28 +203,31 @@
         align-items: center;
     }
     .menu {
-        width: 150%;
+        width: 100%;
         position: sticky;
         top: 7em;
     }
     .menu-container {
+        border-radius: 5px;
         margin-top: 75px;
         width: 98%;
-        min-height: 260px;
+        min-height: 230px;
         max-height: 650px;
         background-color: white;
-        border: 1px solid #cecece;
         display: flex;
         flex-direction: column;
         text-align: center;
         align-items: center;
-        overflow-x: scroll;
-        /*overflow-scrolling: auto;*/
-    }
+        overflow-x: hidden;
+        overflow-y: scroll;
+        box-shadow: 0 0 1px 1px rgba(0, 0, 0, 0.1);
+     }
     .menu-header {
         margin-top: 10px;
         width: 90%;
         border-bottom: 1px solid #cecece;
+        font-weight: bold;
+        padding-bottom: 10px;
     }
     .menu-right > span {
     }
@@ -274,10 +278,11 @@
         }
         .menu {
             display: none;
-            position: fixed;
-            top: 0;
+            position: fixed !important;
             left: 0;
+            top: 0;
             width: 100%;
+            min-width: 150px;
             height: 100%;
             z-index: 667;
         }
@@ -288,6 +293,22 @@
             max-height: none;
         }
     }
+    @media screen and (max-width: 1000px) and (min-width: 650px) {
+        .menu {
+            width: 100%;
+            top: 8.5em;
+        }
+        .menu-container {
+            margin-top: 35px;
+        }
+    }
+    @media screen and (min-width: 1000px) and (max-width: 1300px) {
+        .menu {
+            width: 100%;
+            top: 8.5em;
+        }
+    }
+
 </style>
 <script>
     import axios from 'axios'

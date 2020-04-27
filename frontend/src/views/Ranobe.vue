@@ -36,7 +36,7 @@
             </transition>
         </div>
         <Menu @update="sync" @clear="getFirst" @disable="searchActiveDisable"
-              v-bind:_filter="{tag: choosed_tag, genre: choosed_genre}"></Menu>
+              id="menu-block" v-bind:_filter="{tag: choosed_tag, genre: choosed_genre}"></Menu>
     </div>
 </template>
 <style scoped>
@@ -207,10 +207,79 @@
             width: 20%;
         }
     }
-    @media screen and (max-width: 1000px) and (min-width: 651px) and (min-height: 350px) and (max-height: 600px){
-        
+    @media screen and (max-width: 750px) and (min-width: 650px) {
+        .content {
+            padding-left: 0;
+            padding-right: 0;
+            margin-top: 75px;
+            grid-template-columns: 1fr 1fr;
+        }
+        .content-hover-container {
+            max-width: 70%;
+        }
+        #menu {
+            width: 40%;
+            margin-right: 10px;
+        }
+        .search {
+            position: absolute;
+            width: 80%;
+            left: 10%;
+            right: 50%;
+        }
     }
-
+    @media screen and (max-width: 1000px) and (min-width: 750px) {
+        .content {
+            padding-left: 0;
+            padding-right: 0;
+            margin-top: 75px;
+            grid-template-columns: 1fr 1fr 1fr;
+        }
+        .search {
+            position: absolute;
+            width: 80%;
+            left: 10%;
+            right: 50%;
+        }
+        #menu-block {
+            width: 30%;
+            margin-right: 10px;
+        }
+        .content-hover-container {
+            max-width: 70%;
+        }
+    }
+     @media screen and (min-width: 1000px) and (max-width: 1200px) {
+         .content {
+            padding-left: 0;
+            padding-right: 0;
+            /*margin-top: 75px;*/
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+        }
+          #menu-block {
+            width: 25%;
+            margin-right: 10px;
+        }
+        .content-hover-container {
+            max-width: 80%;
+        }
+     }
+    @media screen and (min-width: 1200px) and (max-width: 1500px) {
+         .content {
+            padding-left: 0;
+            padding-right: 0;
+            /*margin-top: 75px;*/
+            grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+        }
+          #menu-block {
+            max-width: 25%;
+            margin-right: 10px;
+            min-width: 250px;
+        }
+        .content-hover-container {
+            max-width: 90%;
+        }
+     }
 </style>
 <script>
     import axios from 'axios'
