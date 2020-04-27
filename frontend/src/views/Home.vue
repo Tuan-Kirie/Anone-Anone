@@ -16,6 +16,9 @@
             </div>
             <Slider filter-url="http://127.0.0.1:8000/ranobe/likes"></Slider>
         </div>
+         <div class="name-header">
+                <h3>Новости</h3>
+            </div>
         <Blog></Blog>
     </div>
 </template>

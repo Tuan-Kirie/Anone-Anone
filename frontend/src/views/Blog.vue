@@ -95,6 +95,7 @@
         margin-top: 10px;
         padding: 25px 20px;
         width: 90%;
+        max-width: 100%;
         display: flex;
         flex-direction: column;
         margin-left: auto;
@@ -110,19 +111,34 @@
     .blog-wrapper {
         width: 100%;
         height: auto;
-        /*padding-bottom: 250px;*/
     }
     .blog {
         width: 90%;
-        /*height: auto;*/
-        margin-top: 50px;
-        height: 500px;
-        /*background-color: #ececec;*/
+        height: auto;
         margin-left: auto;
-        padding-top: 25px;
         margin-right: auto;
-        box-shadow: 0 0 0 1px #dcdfe6;
         border-radius: 2px;
         padding-bottom: 250px;
+    }
+    @media screen and (min-width: 120px) and (max-width: 650px) {
+        .blog {
+            overflow: hidden;
+        }
+        .meta-data {
+            padding-top: 5px;
+        }
+        .meta-data > div {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .text p img {
+            max-width: 90%;
+            width: 90%;
+            height: auto;
+        }
+        .post-header {
+            flex-direction: column;
+        }
     }
 </style>
