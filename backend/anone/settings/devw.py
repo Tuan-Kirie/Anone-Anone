@@ -27,6 +27,7 @@ DATABASES = {"default": {
     'NAME': 'anoneanone',
     'USER': 'postgres',
     'PASSWORD': '301190',
+    # 'HOST': 'db',
     'HOST': '127.0.0.1',
     'PORT': '5432'}
 }
