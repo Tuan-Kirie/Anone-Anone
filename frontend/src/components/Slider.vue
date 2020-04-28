@@ -43,8 +43,8 @@
                 slider_content: [],
                 slider_content_l: [],
                 swiperOption: {
-                    slidesPerView: document.documentElement.clientWidth  > 600 ? 6: 2,
-                    slidesPerGroup: document.documentElement.clientWidth  > 600 ? 6: 2,
+                    slidesPerView: document.documentElement.clientWidth > 600 ? 6 : 2,
+                    slidesPerGroup: document.documentElement.clientWidth > 600 ? 6 : 2,
                     spaceBetween: 30,
                     // centeredSlides: true,
                     autoplay: {
@@ -61,7 +61,9 @@
                     .then(resp => {
                         if (resp.data.results !== undefined) {
                             this.slider_content = resp.data.results
-                        } else {this.slider_content = resp.data}
+                        } else {
+                            this.slider_content = resp.data
+                        }
                     }).catch(er => {
                     console.log(er)
                 })
@@ -72,6 +74,54 @@
         }
     }
 </script>
-<style scoped lang="sass">
-    @import "./styles/SliderC.sass"
+<style scoped>
+    .swiper {
+        height: auto;
+        width: 100%;
+    }
+    .ranobe-container {
+        width: 250px;
+        height: 280px;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+    }
+    .ranobe-image-cont {
+        max-height: 100%;
+        max-width: 100%;
+    }
+    .ranobe-img {
+        object-fit: cover;
+        height: 100%;
+        max-height: 290px;
+        width: 100%;
+        border-radius: 5px;
+        border: 1px solid #cecece;
+    }
+    .ranobe-img-adult {
+        object-fit: cover;
+        height: 100%;
+        max-height: 290px;
+        width: 100%;
+        border-radius: 5px;
+        filter: blur(3px);
+    }
+    .ranobe-header {
+        background: rgba(0, 0, 0, .8);
+        position: relative;
+        bottom: 19.5%;
+        height: 60px;
+    }
+    .ranobe-header > span {
+        margin-left: 1.5%;
+        margin-right: 1.5%;
+        color: #FFFFFF;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: pre;
+        float: left;
+        width: 97%;
+        text-align: center;
+    }
+
 </style>

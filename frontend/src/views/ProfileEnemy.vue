@@ -9,15 +9,15 @@
                     <h3>Информация</h3>
                 </div>
                 <div class="block-info">
-                    <span>Имя - {{username}}</span>
-                    <span>Дата рождения - {{birth}}</span>
-                    <span>Email - {{email}}</span>
+                    <span id="username">{{username}}</span>
+                    <span id="birth">{{birth}}</span>
+                    <span id="email">{{email}}</span>
                 </div>
             </div>
         </div>
         <div class="right-column">
             <div class="ranobes-container">
-                <span class="elem-name">Список ранобэ</span>
+                <span id="ranobe-list-b" class="elem-name">Список ранобэ</span>
                 <div class="ranobe-filter">
                     <div v-bind:class="{active: isActive.all}" @click="getMarkedRanobes(); contentActivator(0)">
                         <span>Все</span></div>
@@ -178,27 +178,20 @@
         height: auto;
         display: flex;
         justify-content: center;
-        /*display: grid;*/
-        /*grid-template-areas: "prof-cont-l prof-cont-r";*/
-        /*grid-template-columns: 0.3fr 1fr;*/
-        /*grid-template-rows: 1fr;*/
-        /*grid-row-gap: 10px;*/
         padding-bottom: 100px;
-        /*grid-column-gap: 22px;*/
     }
     .left-column {
         height: auto;
         margin-top: 50px;
-        /*grid-area: prof-cont-l;*/
-        box-shadow: 0 0 0 1px #dcdfe6;
         max-width: 300px;
         margin-left: 50px;
-        background-color: white;
         max-height: 560px;
     }
     .fixed-container {
-        height: 500px;
-        position: sticky;
+        background-color: white;
+        box-shadow: 0 0 0 1px #dcdfe6;
+        height: auto;
+        padding-bottom: 10px;
     }
     .image-container {
         width: 100%;
@@ -269,6 +262,22 @@
         background-color: #f6f6f6;
         box-shadow: 0 0 0 1px rgba(214, 214, 214, 1);
     }
+    #username::before {
+        content: "Имя: ";
+        font-weight: bolder;
+    }
+    #email::before {
+        content: 'E-mail: ';
+        font-weight: bolder;
+    }
+    #email {
+        font-size: 14px;
+        white-space: nowrap;
+    }
+    #birth::before {
+        content: 'Дата рождения: ';
+        font-weight: bolder;
+    }
     @media screen and (min-width: 130px) and (max-width: 650px) {
         .left-column, .right-column {
             margin-left: auto;
@@ -318,6 +327,21 @@
         }
         .elem-name {
             padding-left: 10px;
+        }
+    }
+    @media screen and (min-width: 750px) and (max-width: 1200px) {
+        .right-column {
+            max-width: 50%;
+        }
+        .ranobe-name {
+            font-size: 13px;
+        }
+        .ranobe-filter {
+            font-size: 0.9rem;
+        }
+        .ranobe-filter > div {
+            width: auto;
+            padding: 0 10px 0 10px;
         }
     }
 </style>
