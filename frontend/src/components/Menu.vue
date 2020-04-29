@@ -399,12 +399,18 @@
                 this.tags = [];
                 this.genres = [];
                 this.adult = null;
+                this.authors = [];
+                this.publishers = [];
+                this.author_input = '';
+                this.publisher_input = '';
                 this.tags_input = '';
                 this.genres_input = '';
                 this.choosed_tags = [];
                 this.choosed_genres = [];
                 this.choosed_genres_meta = [];
                 this.choosed_tags_meta = [];
+                this.choosed_author = null;
+                this.choosed_publisher = null;
                 this.$emit('clear');
                 this.$emit('disable');
             },
@@ -609,6 +615,15 @@
                 this.choosed_genres_meta.push(this._filter.genre.name);
                 this.searchRanobe();
             }
+            if (this._filter.author !== undefined) {
+                this.choosed_author = this._filter.author
+                this.searchRanobe();
+            }
+            if (this._filter.publisher !== undefined) {
+                this.choosed_publisher = this._filter.publisher
+                this.searchRanobe();
+            }
+
         }
 
 

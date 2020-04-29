@@ -36,7 +36,7 @@
             </transition>
         </div>
         <Menu @update="sync" @clear="getFirst" @disable="searchActiveDisable"
-              id="menu-block" v-bind:_filter="{tag: choosed_tag, genre: choosed_genre}"></Menu>
+              id="menu-block" v-bind:_filter="{tag: choosed_tag, genre: choosed_genre, author: choosed_author, publisher: choosed_publisher}"></Menu>
     </div>
 </template>
 <style scoped>
@@ -288,7 +288,7 @@
     export default {
         name: "Ranobe",
         components: {Menu},
-        props: ['choosedTag', 'choosedGenre'],
+        props: ['choosedTag', 'choosedGenre', 'choosedAuthor', 'choosedPublisher'],
         data() {
             return {
                 ranobes: [],
@@ -298,6 +298,8 @@
                 search_active: false,
                 choosed_tag: this.choosedTag,
                 choosed_genre: this.choosedGenre,
+                choosed_author: this.choosedAuthor,
+                choosed_publisher: this.choosedPublisher,
             }
         },
         methods: {

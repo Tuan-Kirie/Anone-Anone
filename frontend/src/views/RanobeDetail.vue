@@ -45,8 +45,20 @@
                     </span>
                 </div>
                 <div class="ranobe-author-publisher">
-                    <div><h4>Автор:</h4><span>{{author}}</span></div>
-                    <div><h4>Издатель:</h4><span>{{publisher}}</span></div>
+                    <div><h4>Автор:</h4>
+                        <span v-if="author.id !== null">
+                            <router-link
+                            :to="{name: 'Ranobe', params: {'choosedAuthor': {author: author.name, id: author.id} }}"> {{author.name}}
+                            </router-link>
+                        </span>
+                        <span v-else>{{author.name}}</span>
+                    </div>
+                    <div><h4>Издатель:</h4>
+                        <span v-if="publisher.id !== null">
+                            <router-link :to="{name: 'Ranobe', params: {'choosedPublisher': {publisher: publisher.name, id: publisher.id} }}"> {{publisher.name}}</router-link>
+                        </span>
+                        <span v-else>{{publisher.name}}</span>
+                    </div>
                 </div>
                 <div class="ranobe-description" v-if="showCheck(ranobe_description)">
                     <h3>Описание:</h3>
@@ -154,8 +166,8 @@
                         this.image += ('http://127.0.0.1:8000' + resp.data.image);
                         this.alternate_name = resp.data.alternate_name;
                         this.adult_status = resp.data.adult_status;
-                        this.author = resp.data.author_name;
-                        this.publisher = resp.data.publisher_name
+                        this.author = {name: resp.data.author_name, id: resp.data.author};
+                        this.publisher = {name: resp.data.publisher_name, id: resp.data.publisher};
                     }).catch(er => console.log(er))
             },
             lazyloadComments() {
@@ -265,8 +277,7 @@
                     .then(resp => {
                         try {
                             this.isActive.like_button = resp.data.res.like === 1
-                        }
-                        catch (typeError) {
+                        } catch (typeError) {
                             //
                         }
                         this.likes = resp.data.all.like__sum
@@ -312,9 +323,19 @@
         display: inline-flex;
         align-items: center;
     }
-    .ranobe-author-publisher > div > span{
+    .ranobe-author-publisher > div > span {
         margin-left: 10px;
-     }
+    }
+    .ranobe-author-publisher > div > span > a{
+        cursor: pointer;
+        text-decoration: none;
+        color: black;
+    }
+    .ranobe-author-publisher > div > span > a:hover{
+        padding: 3px 6px 3px 6px;
+        border-radius: 4px;
+        background-color:  hsla(240, 4%, 49%, .07);
+    }
     .like-button {
         width: 100%;
         margin-top: 10px;
