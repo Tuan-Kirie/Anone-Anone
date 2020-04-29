@@ -11,11 +11,10 @@
                     <input class="search-input" type="text" placeholder="Введите название Ранобэ" v-model="search_text">
                     <button id="clear-b" class="search-button" @click="searchClear">Очистить</button>
                     <button id="search-b" class="search-button" @click="search">Поиск</button>
-
                 </form>
             </div>
             <transition name="ranobe-trans">
-                <div class="content">
+                <div class="content" v-if="ranobes.length > 0">
                     <div class="ranobe-container" v-for="(ranobe, index) in ranobes" :key="`item-${index}`">
                         <div class="ranobe-image-cont">
                             <router-link class="ran-link"
@@ -33,6 +32,9 @@
                         </div>
                     </div>
                 </div>
+                <div class="content" v-else>
+                    <span class="attention">К сожалению ничего не найдено</span>
+                </div>
             </transition>
         </div>
         <Menu @update="sync" @clear="getFirst" @disable="searchActiveDisable"
@@ -40,7 +42,11 @@
     </div>
 </template>
 <style scoped>
-
+    .attention {
+        padding-left: 6%;
+        width: 100%;
+        white-space: nowrap;
+    }
     .left-to-top {
         position: absolute;
         height: 0;
