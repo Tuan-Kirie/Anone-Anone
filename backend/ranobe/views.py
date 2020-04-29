@@ -4,9 +4,9 @@ from rest_framework.generics import *
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 
-from .models import Ranobe, Chapters, Tags, Genres
+from .models import Ranobe, Chapters, Tags, Genres, Author, Publisher
 from .serializer import RanobeSerializer, DetailRanobeSerializer, ChapterSerializer, TagsSerializer, GenresSerialzier, \
-    DetailChapterSerializer
+    DetailChapterSerializer, AuthorSerializer, PublisherSerializer
 from rest_framework import permissions, filters, generics
 from .filters import RanobeFilter
 
@@ -87,6 +87,24 @@ class GenresView(ListAPIView):
     permission_classes = [permissions.BasePermission]
     filter_backends = [filters.SearchFilter]
     search_fields = ['genre']
+    pagination_class = TagsGenresPagination
+
+
+class AuthorsView(ListAPIView):
+    queryset = Author.objects.all()
+    serializer_class = AuthorSerializer
+    permission_classes = [permissions.BasePermission]
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['author']
+    pagination_class = TagsGenresPagination
+
+
+class PublishersView(ListAPIView):
+    queryset = Publisher.objects.all()
+    serializer_class = PublisherSerializer
+    permission_classes = [permissions.BasePermission]
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['publisher']
     pagination_class = TagsGenresPagination
 
 
