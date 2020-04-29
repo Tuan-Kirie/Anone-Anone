@@ -3,7 +3,7 @@ from .models import Ranobe, Author, Chapters, Tags, Genres
 
 
 class RanobeSerializer(serializers.ModelSerializer):
-    class Meta:
+     class Meta:
         model = Ranobe
         fields = ['id', 'name', 'description', 'publisher_id', 'author_id', 'image', 'adult_status', 'alternate_name']
 

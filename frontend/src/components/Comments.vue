@@ -4,8 +4,6 @@
             <h3 v-if="comment_status !== 'editing'">Комментарии: </h3>
             <h3 v-else>Редактирование комментария</h3>
             <div v-if="token != null">
-                <!--                <textarea v-model="comment_text" placeholder="Оставьте комментарии"-->
-                <!--                          class="comment-text-area" id="edit-container"></textarea>-->
                 <ckeditor :editor="editor" v-model="comment_text" :config="editorConfig"></ckeditor>
 
                 <div class="comment-buttons" v-if="comment_status !== 'editing'">
@@ -191,12 +189,6 @@
     }
     .comments-container {
         width: 94%;
-    }
-    .comment-text-area {
-        border-radius: 3px;
-        padding: 12px 14px;
-        width: 100%;
-        height: 50px;
     }
     .send-comment-button {
         background-color: #2898af; /* Green */
