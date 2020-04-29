@@ -1,17 +1,11 @@
 from rest_framework import serializers
-from .models import Ranobe, Author, Chapters, Tags, Genres
+from .models import Ranobe, Author, Chapters, Tags, Genres, Publisher
 
 
 class RanobeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Ranobe
         fields = ['id', 'name', 'description', 'publisher_id', 'author_id', 'image', 'adult_status', 'alternate_name']
-
-
-class AuthorSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Author
-        fields = ['author']
 
 
 class DetailRanobeSerializer(serializers.ModelSerializer):
@@ -65,6 +59,18 @@ class TagsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tags
         fields = "__all__"
+
+
+class AuthorSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Author
+        fields = '__all__'
+
+
+class PublisherSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Publisher
+        fields = '__all__'
 
 
 class GenresSerialzier(serializers.ModelSerializer):

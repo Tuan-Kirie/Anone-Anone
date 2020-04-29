@@ -8,7 +8,7 @@
                 <div class="menu-content">
                     <div class="adult-status">
                         <span>Для взрослых</span>
-                        <input type="checkbox" v-model="adult" id="checkbox">
+                        <input type="checkbox" v-model="adult" id="checkbox" @change="searchRanobe">
                     </div>
                     <div class="genres">
                         <span @click="getGenres" class="meta-text">Жанры <div class="counter-meta">{{this.choosed_genres.length}}</div></span>
@@ -47,6 +47,47 @@
                             <div class="genres-list" v-for="tag in tags" :key="tag.id"
                                  @click="addTagToSearch(tag.id, tag.tag)">
                                 {{tag.tag}}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tags">
+                        <span @click="getAuthors" class="meta-text">Авторы</span>
+                        <div class="choosed-list">
+                            <div class="choosed-meta" @click="removeChoosedAuthor"
+                                 v-if="this.choosed_author !== null">
+                                <span>{{choosed_author.author}}</span>
+                                <img src="http://127.0.0.1:8080/remove.svg" alt="">
+                            </div>
+                        </div>
+                        <transition name="filter">
+                            <input type="text" v-show="authors_show" placeholder="Введите имя" v-model="author_input"
+                                   @input="searchAuthors">
+                        </transition>
+                        <div class="meta-list-container" v-show="authors_show">
+                            <div class="genres-list" v-for="author in authors" :key="author.id"
+                                 @click="addAuthorToSearch(author)">
+                                {{author.author}}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tags">
+                        <span @click="getPublishers" class="meta-text">Издатели</span>
+                        <div class="choosed-list">
+                            <div class="choosed-meta" @click="removeChoosedPublisher"
+                                 v-if="this.choosed_publisher !== null">
+                                <span>{{choosed_publisher.publisher}}</span>
+                                <img src="http://127.0.0.1:8080/remove.svg" alt="">
+                            </div>
+                        </div>
+                        <transition name="filter">
+                            <input type="text" v-show="publishers_show" placeholder="Введите имя"
+                                   v-model="publisher_input"
+                                   @input="searchPublishers">
+                        </transition>
+                        <div class="meta-list-container" v-show="publishers_show">
+                            <div class="genres-list" v-for="publisher in publishers" :key="publisher.id"
+                                 @click="addPublisherToSearch(publisher)">
+                                {{publisher.publisher}}
                             </div>
                         </div>
                     </div>
@@ -140,6 +181,7 @@
         width: 100%;
         display: flex;
         justify-content: space-between;
+        cursor: pointer;
     }
     .meta-list-container {
         width: 100%;
@@ -221,7 +263,7 @@
         overflow-x: hidden;
         overflow-y: scroll;
         box-shadow: 0 0 1px 1px rgba(0, 0, 0, 0.1);
-     }
+    }
     .menu-header {
         margin-top: 10px;
         width: 90%;
@@ -320,13 +362,21 @@
             return {
                 genres_show: false,
                 tags_show: false,
+                authors_show: false,
+                publishers_show: false,
                 tags: [],
                 genres: [],
+                authors: [],
+                publishers: [],
                 adult: null,
                 tags_input: '',
                 genres_input: '',
+                author_input: '',
+                publisher_input: '',
                 choosed_tags: [],
                 choosed_genres: [],
+                choosed_author: null,
+                choosed_publisher: null,
                 choosed_tags_meta: [],
                 choosed_genres_meta: [],
                 show_menu: false,
@@ -349,12 +399,18 @@
                 this.tags = [];
                 this.genres = [];
                 this.adult = null;
+                this.authors = [];
+                this.publishers = [];
+                this.author_input = '';
+                this.publisher_input = '';
                 this.tags_input = '';
                 this.genres_input = '';
                 this.choosed_tags = [];
                 this.choosed_genres = [];
                 this.choosed_genres_meta = [];
                 this.choosed_tags_meta = [];
+                this.choosed_author = null;
+                this.choosed_publisher = null;
                 this.$emit('clear');
                 this.$emit('disable');
             },
@@ -364,6 +420,14 @@
                 this.choosed_tags.splice(tag_id, 1);
                 this.searchRanobe()
             },
+            removeChoosedAuthor() {
+                this.choosed_author = null;
+                this.searchRanobe()
+            },
+            removeChoosedPublisher() {
+                this.choosed_publisher = null;
+                this.searchRanobe()
+            },
             removeChoosedGenre(genre_name) {
                 const genre_id = this.choosed_genres_meta.indexOf(genre_name);
                 this.choosed_genres_meta.splice(genre_id, 1);
@@ -371,6 +435,11 @@
                 this.searchRanobe()
             },
             getTags() {
+                 if (this.tags_show === true) {
+                    this.tags_show = false
+                    this.tags = [];
+                    return;
+                }
                 this.tags = [];
                 this.tags_show = !this.tags_show;
                 axios.get('http://127.0.0.1:8000/tags/list/')
@@ -382,7 +451,38 @@
                     console.log(er)
                 })
             },
+            getAuthors() {
+                if (this.authors_show === true) {
+                    this.authors_show = false
+                    this.authors = [];
+                    return;
+                }
+                this.authors = [];
+                this.authors_show = !this.authors_show;
+                axios.get('http://127.0.0.1:8000/authors/list/')
+                    .then(resp => {
+                        this.authors = resp.data.results
+                    })
+            },
+            getPublishers() {
+                if (this.publishers_show === true) {
+                    this.publishers_show = false
+                    this.publishers = [];
+                    return;
+                }
+                this.publishers = [];
+                this.publishers_show = !this.publishers_show;
+                axios.get('http://127.0.0.1:8000/publishers/list/')
+                    .then(resp => {
+                        this.publishers = resp.data.results
+                    })
+            },
             getGenres() {
+                if (this.genres_show === true) {
+                    this.genres_show = false
+                    this.genres = [];
+                    return;
+                }
                 this.genres = [];
                 this.genres_show = !this.genres_show;
                 axios.get('http://127.0.0.1:8000/genres/list/')
@@ -418,6 +518,26 @@
                     console.log(er)
                 })
             },
+            searchAuthors() {
+                this.authors = [];
+                let search_url = 'http://127.0.0.1:8000/authors/list/?search=' + this.author_input;
+                axios.get(search_url)
+                    .then(resp => {
+                        this.authors = resp.data.results;
+                    }).catch(er => {
+                    console.log(er)
+                })
+            },
+            searchPublishers() {
+                this.publishers = []
+                let search_url = 'http://127.0.0.1:8000/publishers/list/?search=' + this.author_input;
+                axios.get(search_url)
+                    .then(resp => {
+                        this.publishers = resp.data.results;
+                    }).catch(er => {
+                    console.log(er)
+                })
+            },
             addTagToSearch(tag, tag_name) {
                 if (this.choosed_tags.includes(tag) === false) {
                     this.choosed_tags.push(tag);
@@ -426,7 +546,14 @@
                 } else {
                     //   Заглушка для надписи
                 }
-
+            },
+            addAuthorToSearch(author) {
+                this.choosed_author = author
+                this.searchRanobe()
+            },
+            addPublisherToSearch(publisher) {
+                this.choosed_publisher = publisher
+                this.searchRanobe()
             },
             addGenreToSearch(genre, genre_name) {
                 if (this.choosed_genres.includes(genre) === false) {
@@ -461,6 +588,12 @@
                 } else if (this.choosed_genres.length === 1) {
                     filter += '&genres=' + this.choosed_genres[0]
                 }
+                if (this.choosed_author !== null) {
+                    filter += '&author=' + this.choosed_author.id
+                }
+                if (this.choosed_publisher !== null) {
+                    filter += '&publisher=' + this.choosed_publisher.id
+                }
                 let search_url = 'http://127.0.0.1:8000/ranobe/?' + filter;
                 axios.get(search_url)
                     .then(resp => {
@@ -482,6 +615,15 @@
                 this.choosed_genres_meta.push(this._filter.genre.name);
                 this.searchRanobe();
             }
+            if (this._filter.author !== undefined) {
+                this.choosed_author = this._filter.author
+                this.searchRanobe();
+            }
+            if (this._filter.publisher !== undefined) {
+                this.choosed_publisher = this._filter.publisher
+                this.searchRanobe();
+            }
+
         }
 
 

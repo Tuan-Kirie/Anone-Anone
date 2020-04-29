@@ -68,8 +68,6 @@
         methods: {
             checkBtn() {
                 let selected_position = this.getPositionLoop()
-                console.log(selected_position)
-                console.log(this.chapters.length)
                 if (selected_position === 0) {
                     this.isActive.disable_prev_btn = true
                     this.isActive.disable_next_btn = false
@@ -170,8 +168,7 @@
                 if (this.isActive.disable_next_btn === false) {
                     if (this.next_page_link === null || this.next_page_link === undefined) {
                         let chapter_position = this.getPositionLoop()
-                        console.log(chapter_position)
-                        if (chapter_position !== this.chapters.length && chapter_position !== -1) {
+                         if (chapter_position !== this.chapters.length && this.chapters.length > 1 && chapter_position !== -1) {
                             this.selectPage(this.chapters[chapter_position + 1].id)
                             this.addToHistory()
                         }
@@ -190,7 +187,6 @@
                 if (this.isActive.disable_prev_btn === false) {
                     let chapter_position = this.getPositionLoop()
                     if (chapter_position !== 0) {
-                        console.log(chapter_position)
                         this.selectPage(this.chapters[chapter_position - 1].id)
                         this.addToHistory()
                     }
@@ -202,8 +198,7 @@
                         let url = `http://127.0.0.1:8000/ranobe/${this.ranobeId}/history/`;
                         let _data = new FormData()
                         _data.append('chapter_id', this.selectedChapter.id)
-                        axios.post(url, _data, this.headers)
-                            .then(resp => console.log(resp)).catch(er => console.log(er))
+                        axios.post(url, _data, this.headers).catch(er => console.log(er))
                     }
                 }
             }

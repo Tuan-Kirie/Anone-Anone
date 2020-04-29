@@ -13,7 +13,7 @@ from django.conf import settings
 from django.contrib.staticfiles.storage import staticfiles_storage
 from comments.views import CommentView, CommentCreateView, UpdateDestroyCommentView
 
-from ranobe.views import TagsView, GenresView, RanobeListLikesView
+from ranobe.views import TagsView, GenresView, RanobeListLikesView, PublishersView, AuthorsView
 from blog.views import BlogListView, DetailBlogView
 
 urlpatterns = [
@@ -44,6 +44,8 @@ urlpatterns = [
     path('user/short/', ShortUserView.as_view()),
     path('tags/list/', TagsView.as_view()),
     path('genres/list/', GenresView.as_view()),
+    path('authors/list/', AuthorsView.as_view()),
+    path('publishers/list/', PublishersView.as_view()),
     path('blog/', BlogListView.as_view()),
     url(r'^blog/(?P<post_id>[0-9]+)/$', DetailBlogView.as_view()),
     url(r'^another/user/(?P<user_id>[0-9]+)/$', AnotherUserView.as_view()),

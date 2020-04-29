@@ -44,6 +44,22 @@
                                 :to="{name: 'Ranobe', params: {'choosedGenre': {name: genre.name, id: genre.id} }}"> {{genre.name}}</router-link>
                     </span>
                 </div>
+                <div class="ranobe-author-publisher">
+                    <div><h4>Автор:</h4>
+                        <span v-if="author.id !== null">
+                            <router-link
+                            :to="{name: 'Ranobe', params: {'choosedAuthor': {author: author.name, id: author.id} }}"> {{author.name}}
+                            </router-link>
+                        </span>
+                        <span v-else>{{author.name}}</span>
+                    </div>
+                    <div><h4>Издатель:</h4>
+                        <span v-if="publisher.id !== null">
+                            <router-link :to="{name: 'Ranobe', params: {'choosedPublisher': {publisher: publisher.name, id: publisher.id} }}"> {{publisher.name}}</router-link>
+                        </span>
+                        <span v-else>{{publisher.name}}</span>
+                    </div>
+                </div>
                 <div class="ranobe-description" v-if="showCheck(ranobe_description)">
                     <h3>Описание:</h3>
                     <div class="description-box">{{this.ranobe_description}}</div>
@@ -106,8 +122,8 @@
                 ranobe_description: '',
                 tags: [],
                 genres: [],
-                author_name: '',
-                publisher_name: '',
+                author: '',
+                publisher: '',
                 image: '',
                 adult_status: '',
                 alternate_name: '',
@@ -150,6 +166,8 @@
                         this.image += ('http://127.0.0.1:8000' + resp.data.image);
                         this.alternate_name = resp.data.alternate_name;
                         this.adult_status = resp.data.adult_status;
+                        this.author = {name: resp.data.author_name, id: resp.data.author};
+                        this.publisher = {name: resp.data.publisher_name, id: resp.data.publisher};
                     }).catch(er => console.log(er))
             },
             lazyloadComments() {
@@ -257,7 +275,11 @@
                 let url = `http://127.0.0.1:8000/ranobe/${this.ranobe_id}/likes/`
                 axios.get(url, {headers: {'Authorization': "JWT " + this.$store.state.token}})
                     .then(resp => {
-                        this.isActive.like_button = resp.data.res.like === 1
+                        try {
+                            this.isActive.like_button = resp.data.res.like === 1
+                        } catch (typeError) {
+                            //
+                        }
                         this.likes = resp.data.all.like__sum
                     }).catch(er => console.log(er))
             },
@@ -292,6 +314,28 @@
 </script>
 
 <style scoped>
+    .ranobe-author-publisher {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+    .ranobe-author-publisher > div {
+        display: inline-flex;
+        align-items: center;
+    }
+    .ranobe-author-publisher > div > span {
+        margin-left: 10px;
+    }
+    .ranobe-author-publisher > div > span > a{
+        cursor: pointer;
+        text-decoration: none;
+        color: black;
+    }
+    .ranobe-author-publisher > div > span > a:hover{
+        padding: 3px 6px 3px 6px;
+        border-radius: 4px;
+        background-color:  hsla(240, 4%, 49%, .07);
+    }
     .like-button {
         width: 100%;
         margin-top: 10px;
@@ -307,12 +351,10 @@
         font-family: Open Sans, Arial, sans-serif !important;
         cursor: pointer;
     }
-
     .heart-icon {
         position: relative;
         top: 5px;
     }
-
     .heart-icon.active::before {
         content: " ";
         display: inline-block;
@@ -322,7 +364,6 @@
         margin-right: 4px;
         background-size: 20px;
     }
-
     .heart-icon::before {
         content: " ";
         display: inline-block;
@@ -331,17 +372,13 @@
         height: 20px;
         margin-right: 4px;
         background-size: 20px;
-
     }
-
     .like-button > span:last-child {
         margin-left: 3px;
     }
-
     .like-button:hover {
         background: rgba(0, 0, 0, .1);
     }
-
     .comment-show-button {
         margin-top: 70px;
         height: 30px;
@@ -353,11 +390,9 @@
         text-align: center;
         padding-top: 10px;
     }
-
     .comment-show-button:hover, .comment-show-button:active {
         box-shadow: 0 1px 1px 1px rgba(0, 0, 0, .1), 0 0 1px 1px #3c82e6;
     }
-
     .tags-column {
         margin-top: 20px;
         margin-right: auto;
@@ -371,16 +406,13 @@
         height: 290px;
         overflow: hidden;
     }
-
     .tags-column span:last-child {
         padding-bottom: 20px;
     }
-
     .tags-column > span {
         margin-top: 10px;
         padding-top: 7px;
     }
-
     .tags-column > span > a {
         text-decoration: none;
         padding: 7px 12px;
@@ -394,13 +426,11 @@
         margin-top: 7px;
         border-radius: 10px;
     }
-
     .tags-column > h3 {
         padding-bottom: 7px;
         margin-bottom: 6px;
         border-bottom: 1px solid #cecece;
     }
-
     .show-tags {
         margin-left: auto;
         margin-right: auto;
@@ -413,15 +443,12 @@
         font-size: 1vmax;
         border: 1px solid #d8d8d8;
     }
-
     .show-tags:last-child {
         padding-bottom: 10px;
     }
-
     .show-tags:hover, .show-tags:active {
         box-shadow: 0 1px 1px 1px rgba(0, 0, 0, .1), 0 0 1px 1px #3c82e6;
     }
-
     .ranobe-container {
         background-color: white;
         padding-top: 10px;
@@ -431,7 +458,6 @@
         justify-self: center;
         display: inline-flex;
     }
-
     .ranobe-left-column {
         width: 18.75%;
         padding-left: 10px;
@@ -439,27 +465,22 @@
         height: 500px;
         top: 75px;
     }
-
     .ranobe-left-column > a {
         text-decoration: none;
     }
-
     .ranobe-main-column {
         padding-left: 1rem;
         padding-right: 1rem;
         width: 62.5%;
     }
-
     .ranobe-right-column {
         width: 18.75%;
         position: sticky;
         height: 500px;
         top: 75px;
     }
-
     .image-container {
     }
-
     .image-container > img {
         position: relative;
         max-width: 100%;
@@ -470,7 +491,6 @@
         border-radius: 6px;
         cursor: pointer;
     }
-
     .read-button {
         margin-top: 10px;
         width: 100%;
@@ -484,7 +504,6 @@
         text-align: center;
         padding-top: 3px;
     }
-
     .dropdown-menu {
         border: 1px solid hsla(0, 0%, 54.9%, .55);
         padding: 5px 0 5px 0;
@@ -493,11 +512,9 @@
         font-size: .9em;
         margin-top: 10px;
     }
-
     .dropdown-menu:active, .dropdown-menu:hover {
         box-shadow: 0 1px 1px 1px rgba(0, 0, 0, .1), 0 0 1px 1px #3c82e6;
     }
-
     .dropdown-menu > span::before {
         background-image: url("http://127.0.0.1:8080/plus.svg");
         margin-right: 3px;
@@ -507,25 +524,20 @@
         background-size: 12px 12px;
         height: 12px;
     }
-
     .dropdown-menu {
         cursor: pointer;
     }
-
     .add-to-planned {
         border-top: 1px dotted #3c3c3c;
         padding-top: 10px;
     }
-
     .dropdown-content > div {
         margin-top: 10px;
         font-weight: bold;
     }
-
     .dropdown-content > div:hover {
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
     }
-
     .add-to-bookmark, .del-bookmark {
         border: 1px solid hsla(0, 0%, 54.9%, .55);
         padding: 6px 26px 6px 12px;
@@ -536,11 +548,9 @@
         margin-top: 10px;
         cursor: pointer;
     }
-
     .add-to-bookmark:hover, .del-bookmark:hover {
         box-shadow: 0 1px 1px 1px rgba(0, 0, 0, .1), 0 0 1px 1px #3c82e6;
     }
-
     .add-to-bookmark > span:before, .del-bookmark > span:before {
         background-image: url("http://127.0.0.1:8080/bookmark.svg");
         margin-right: 3px;
@@ -551,25 +561,21 @@
         background-size: 12px 12px;
         height: 12px;
     }
-
     h1 {
         font-size: 1.71428571rem;
     }
-
     .ranobe-tags, .ranobe-genres {
         display: inline-flex;
         align-items: center;
         flex-wrap: wrap;
         width: 95%;
     }
-
     .ranobe-tags > span, .ranobe-genres > span {
         padding-top: 3px;
         display: block;
         width: auto;
         /*max-height: 20px;*/
     }
-
     .ranobe-tags > span > a, .ranobe-genres > span > a {
         display: inline-block;
         padding: 7px 12px;
@@ -585,55 +591,54 @@
         white-space: nowrap;
         background-color: hsla(240, 4%, 49%, .07);
     }
-
     .ranobe-tags > h3, .ranobe-genres > h3 {
         padding-right: 6px;
     }
-
     .description-box {
         overflow: hidden;
         overflow-wrap: break-word;
     }
-@media screen and (min-width: 130px) and (max-width: 650px) {
-    .ranobe-container {
-        flex-direction: column;
+    @media screen and (min-width: 130px) and (max-width: 650px) {
+        .ranobe-container {
+            flex-direction: column;
+        }
+        .ranobe-left-column {
+            max-width: 90%;
+            width: 80%;
+            margin: 0 auto;
+            padding-bottom: 10px;
+            padding-left: 0;
+            border-bottom: 1px solid #1b1c1d;
+            order: 1;
+            height: auto;
+        }
+        .ranobe-main-column {
+            width: 95%;
+            padding: 5px;
+            margin: 15px 0 0 0;
+            order: 3;
+        }
+        .h1 {
+            font-size: 15px;
+        }
+        .ranobe-right-column {
+            order: 2;
+            width: 95%;
+            margin: 14px auto 0 auto;
+            height: auto;
+        }
+        /*.show-tags  {*/
+        /*    display: none;*/
+        /*}*/
+        /*.tags-column {*/
+        /*    height: auto;*/
+        /*}*/
     }
-    .ranobe-left-column {
-        max-width: 90%;
-        width: 80%;
-        margin: 0 auto;
-        padding-bottom: 10px;
-        padding-left: 0;
-        border-bottom: 1px solid #1b1c1d;
-        order: 1;
-        height: auto;
-    }
-    .ranobe-main-column {
-        width: 95%;
-        padding: 5px;
-        margin: 15px 0 0 0;
-        order: 3;
-    }
-    .h1 {
-        font-size: 15px;
-    }
-    .ranobe-right-column {
-        order: 2;
-        width: 95%;
-        margin: 14px auto 0 auto;
-         height: auto;
-    }
-    /*.show-tags  {*/
-    /*    display: none;*/
-    /*}*/
-    /*.tags-column {*/
-    /*    height: auto;*/
-    /*}*/
-}   .add-to-bookmark {
+    .add-to-bookmark {
         margin-left: auto;
         margin-right: auto;
     }
-    .tags-column > span > a{
+    .tags-column > span > a {
         font-size: 13px;
     }
     /*.slide-fade-enter-active {*/
