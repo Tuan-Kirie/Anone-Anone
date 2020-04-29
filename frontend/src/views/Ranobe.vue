@@ -149,7 +149,7 @@
         max-height: 290px;
         width: 100%;
         border-radius: 5px;
-        filter: blur(3px);
+        filter: blur(4px);
     }
     .ranobe-container {
         min-width: 97%;

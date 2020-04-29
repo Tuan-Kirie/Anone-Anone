@@ -8,7 +8,7 @@
                 <div class="menu-content">
                     <div class="adult-status">
                         <span>Для взрослых</span>
-                        <input type="checkbox" v-model="adult" id="checkbox">
+                        <input type="checkbox" v-model="adult" id="checkbox" @change="searchRanobe">
                     </div>
                     <div class="genres">
                         <span @click="getGenres" class="meta-text">Жанры <div class="counter-meta">{{this.choosed_genres.length}}</div></span>
@@ -140,6 +140,7 @@
         width: 100%;
         display: flex;
         justify-content: space-between;
+        cursor: pointer;
     }
     .meta-list-container {
         width: 100%;
