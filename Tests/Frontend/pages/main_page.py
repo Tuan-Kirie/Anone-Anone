@@ -1,9 +1,7 @@
-import time
-
 from .base_page import BasePage
 from .locators import MainPageLocators
-from selenium.webdriver.common.action_chains import ActionChains
 from ..usable_consts import Consts
+from selenium.webdriver.common.action_chains import ActionChains
 
 
 class MainPage(BasePage):

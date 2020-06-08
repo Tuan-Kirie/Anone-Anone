@@ -28,3 +28,10 @@ class BasePage:
         except TimeoutException:
             return False
         return True
+
+    def return_element_after_present(self, selector, locator):
+        try:
+            WebDriverWait(self.driver, 4).until(expected_conditions.presence_of_element_located((selector, locator)))
+            return self.driver.find_element(selector, locator)
+        except TimeoutException:
+            return False
