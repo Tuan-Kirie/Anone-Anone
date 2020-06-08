@@ -19,8 +19,8 @@
                                 <div class="response-info">
                                     <span>{{login_status}}</span>
                                 </div>
-                                <button @click="login" class="top-button">Войти</button>
-                                <button @click="register" class="top-button">Регистрация</button>
+                                <button @click="login" id="login-btn" class="top-button">Войти</button>
+                                <button @click="register" id="register-btn" class="top-button">Регистрация</button>
                             </form>
                         </div>
                     </div>

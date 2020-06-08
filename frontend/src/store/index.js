@@ -47,9 +47,9 @@ export default new Vuex.Store({
                     .then(resp => {
                         const token = resp.data.token;
                         localStorage.setItem('token', token);
+                        router.push({name: 'Profile'})
                         commit('auth_success', token);
                         resolve(resp);
-                        router.push({name: 'Profile'})
                     })
                     .catch(er => {
                         commit('auth_error');
@@ -61,11 +61,12 @@ export default new Vuex.Store({
         getShortData({commit}, token) {
             return new Promise(((resolve, reject) => {
                 axios.get('http://127.0.0.1:8000/user/short/',
-                    {headers: {'Authorization': "JWT " + token}})
+                    {headers: {'Authorization': "JWT " + token, 'async': false}})
                     .then(resp => {
                         const user_id = resp.data.id;
                         localStorage.setItem('user_id', user_id)
                         const username_pr = resp.data.username;
+                        console.log(username_pr)
                         localStorage.setItem('username_pr', username_pr)
                         commit('short_data', user_id, username_pr);
                         resolve(resp);
