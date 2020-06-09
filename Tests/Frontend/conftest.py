@@ -3,7 +3,7 @@ from selenium import webdriver
 
 
 @pytest.fixture(scope='function')
-def driver():
+def driver() -> webdriver:
     """
     Main selenium Fixture to initiate ChromeDriver
     :param

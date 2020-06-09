@@ -1,5 +1,9 @@
+from selenium.common.exceptions import TimeoutException
+from selenium.webdriver.support import expected_conditions
+
 from .base_page import BasePage
 from .locators import RanobeListPageLocators
+from selenium.webdriver.support.ui import WebDriverWait
 from ..usable_consts import Consts
 import random
 
@@ -22,3 +26,18 @@ class RanobeListPage(BasePage):
     def clear_search(self):
         clear_btn = self.driver.find_element(*RanobeListPageLocators.SEARCH_CLEAR_BUTTON)
         clear_btn.click()
+
+    def filter_search_adult(self):
+        adult_checkbox = self.driver.find_element(*RanobeListPageLocators.FILTER_ADULT_CHECKBOX)
+        adult_checkbox.click()
+
+    def filter_search_genre(self):
+        genre_show_btn = self.driver.find_element(*RanobeListPageLocators.GENRES_SHOW_BTN)
+        genre_show_btn.click()
+        if genre := self.return_element_after_present(*RanobeListPageLocators.FILTER_GENRES_LIST):
+            genre.click()
+
+    def filter_search_clear(self):
+        filter_clear_btn = self.driver.find_element(*RanobeListPageLocators.FILTER_CLEAR_BTN)
+        filter_clear_btn.click()
+

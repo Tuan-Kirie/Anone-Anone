@@ -38,3 +38,38 @@ def test_search_data_clearing(driver):
     assert first_load_ranobes == last_load_ranobes, "Поиск не сбросился"
 
 
+def test_filter_adult_search(driver):
+    page = RanobeListPage(driver, Consts.RANOBE_LIST_URL)
+    page.open_page()
+    first_load_ranobes = page.find_ranobes()
+    page.filter_search_adult()
+    last_load_ranobes = page.find_ranobes()
+    assert first_load_ranobes != last_load_ranobes
+
+
+def test_filter_genre_search(driver):
+    page = RanobeListPage(driver, Consts.RANOBE_LIST_URL)
+    page.open_page()
+    first_load_ranobes = page.find_ranobes()
+    page.filter_search_genre()
+    last_load_ranobes = page.find_ranobes()
+    assert first_load_ranobes != last_load_ranobes
+
+
+def test_filter_clearing(driver):
+    """
+    sleep for ajax content changed
+    :param driver:
+    :return:
+    """
+    page = RanobeListPage(driver, Consts.RANOBE_LIST_URL)
+    page.open_page()
+    first_load_ranobes = page.find_ranobes()
+    page.filter_search_adult()
+    time.sleep(1)
+    second_load_ranobes = page.find_ranobes()
+    page.filter_search_clear()
+    time.sleep(1)
+    last_load_ranobes = page.find_ranobes()
+    assert (second_load_ranobes != (first_load_ranobes and last_load_ranobes))
+
