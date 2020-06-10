@@ -6,6 +6,39 @@ from selenium.webdriver.chrome.options import Options
 from .usable_consts import Consts
 
 
+class Database:
+    """
+    Create postgress database instance to delete registered account
+    :return:
+    """
+
+    def __init__(self):
+        self.con = psycopg2.connect('dbname=anoneanone user=postgres password=301190')
+        self.cursor = self.con.cursor()
+
+    def delete_registered_user(self, username):
+        test_user_username = username
+        self.cursor.execute(f"SELECT id FROM auth_user WHERE username='{test_user_username}'")
+        test_user_id = self.cursor.fetchone()[0]
+        self.cursor.execute(f"DELETE FROM users_profile CASCADE WHERE user_id={test_user_id}")
+        self.con.commit()
+        self.cursor.execute(f"DELETE FROM auth_user CASCADE WHERE id={test_user_id}")
+        self.con.commit()
+        print("ACCOUNT HAS BEEN DELETED")
+
+    def create_test_account(self):
+        self.cursor.execute("""INSERT INTO auth_user (username, password, email, is_superuser, first_name, last_name, is_staff, is_active, date_joined)
+                       VALUES ('main_test_account', 'pbkdf2_sha256$180000$UOy3H6XECTLD$ukrsFGgOO4ZGywx/JJKBmt9/x2d6OOvK5ZphfDlKTl0=', 'main_test_account_p@ss.ff', FALSE, 'main_test_account_p',
+                       'main_test_account_p', FALSE, TRUE, '1999-01-08');
+                       """)
+        self.con.commit()
+        self.cursor.execute("SELECT id FROM auth_user WHERE username='main_test_account'")
+        user_id = self.cursor.fetchone()[0]
+        self.cursor.execute(
+            f"INSERT INTO users_profile (profile_img, user_id) VALUES ('media/profile/default.jpg', {user_id})")
+        self.con.commit()
+
+
 @pytest.fixture(scope='function')
 def driver() -> webdriver:
     """
@@ -13,7 +46,7 @@ def driver() -> webdriver:
     :param
     :return: driver instance
     """
-    # Added options cause CORS police blocking axios requests from Chromedriver
+    # Added options cause CORS police blocking axios requests to backend api
     chrome_options = Options()
     executable_path = 'C:\chromedriver\chromedriver.exe'
     chrome_options.add_argument("--test-type")
@@ -31,22 +64,15 @@ def driver() -> webdriver:
 
 
 @pytest.fixture(scope='session', autouse=True)
-def database():
-    con = psycopg2.connect('dbname=anoneanone user=postgres password=301190')
-    cursor = con.cursor()
+def init_accounts():
+    db = Database()
+    db.create_test_account()
     yield
-    delete_registered_user(cursor)
-    con.commit()
+    db.delete_registered_user('main_test_account')
 
 
-def delete_registered_user(cursor):
-    test_user_username = Consts.TEST_ACCOUNT[0]
-    cursor.execute(f"SELECT id FROM auth_user WHERE username='{test_user_username}'")
-    test_user_id = cursor.fetchone()[0]
-    print(test_user_id)
-    cursor.execute(f"DELETE FROM users_profile CASCADE WHERE user_id={test_user_id}")
-    cursor.execute(f"DELETE FROM auth_user CASCADE WHERE id={test_user_id}")
-
-    print("ACCOUNT HAS BEEN DELETED")
-
-# database()
+@pytest.fixture()
+def delete_registered_user():
+    db = Database()
+    yield
+    db.delete_registered_user(Consts.TEST_ACCOUNT[0])

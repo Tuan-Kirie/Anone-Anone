@@ -34,7 +34,7 @@ def test_guest_can_go_to_news_page(driver):
     page = MainPage(driver, url=Consts.MAIN_PAGE_URL)
     page.open_page()
     page.go_to_news_page()
-    assert '/blog' in page.driver.current_url , "Ошибка с переходом на страницу"
+    assert '/blog' in page.driver.current_url, "Ошибка с переходом на страницу"
 
 
 @pytest.mark.xfail(reason="ChromeDriver does not correct running ajax(axios) async request, aborting websocket "
@@ -45,4 +45,4 @@ def test_guest_can_login_from_main_page(driver):
     page.show_login_form()
     page.login_test_account()
     time.sleep(10)
-    assert '/profile' in page.driver.current_url , "Ошибка Авторизации"
+    assert '/profile' in page.driver.current_url, "Ошибка Авторизации"

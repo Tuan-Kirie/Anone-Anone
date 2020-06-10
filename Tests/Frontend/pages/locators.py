@@ -12,6 +12,7 @@ class MainPageLocators:
     LOGIN_FORM_REGISTER_BTN = (By.CSS_SELECTOR, '#register-btn')
     PROFILE_HIDDEN_MENU_ACTIVE = (By.XPATH, "//*[@id='hiddenMenu'][contains(@style, 'display: flex')]")
 
+
 class RanobeListPageLocators:
     RANOBE_LIST = (By.CSS_SELECTOR, '.ranobe-container')
     SEARCH_INPUT = (By.CSS_SELECTOR, '.search > form > input')
@@ -48,4 +49,8 @@ class RegisterPageLocators:
     REGISTER_BTN = (By.CSS_SELECTOR, '.register-form > button')
     REGISTER_ACCESS_MSG = (By.CSS_SELECTOR, '.login-form > .login-message > span')
     LOGIN_FORM_INPUTS = (By.CSS_SELECTOR, '.login-form > input')
-    LOGIN_SUBMIT_BTN = (By.CSS_SELECTOR, '.login-form > button.top-button')
+    LOGIN_SUBMIT_BTN = (By.CSS_SELECTOR, '.register-form-back .top-button')
+
+
+class ProfilePageLocators:
+    PROFILE_BODY = (By.CSS_SELECTOR, '.profile-container')
