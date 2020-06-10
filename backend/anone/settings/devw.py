@@ -38,3 +38,16 @@ CORS_ORIGIN_WHITELIST = [
     'http://127.0.0.1:8000',
 ]
 SITE_URL = "http://127.0.0.1:8000"
+
+CORS_ALLOW_HEADERS = (
+    'accept',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'async',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with',
+)

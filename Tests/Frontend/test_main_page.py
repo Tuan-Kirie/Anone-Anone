@@ -44,4 +44,5 @@ def test_guest_can_login_from_main_page(driver):
     page.open_page()
     page.show_login_form()
     page.login_test_account()
+    time.sleep(30)
     assert '/profile' in page.driver.current_url , "Ошибка Авторизации"

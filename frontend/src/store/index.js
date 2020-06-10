@@ -43,7 +43,7 @@ export default new Vuex.Store({
         login({commit}, user) {
             return new Promise(((resolve, reject) => {
                 commit('auth_request');
-                axios.post('http://127.0.0.1:8000/api-token-auth/', user)
+                axios.post('http://127.0.0.1:8000/api-token-auth/', user, {headers:{'async': false}})
                     .then(resp => {
                         const token = resp.data.token;
                         localStorage.setItem('token', token);

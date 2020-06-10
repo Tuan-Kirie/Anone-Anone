@@ -5,7 +5,7 @@ from selenium.webdriver.support import expected_conditions
 
 
 class BasePage:
-    def __init__(self, driver: webdriver, url, timeout=4):
+    def __init__(self, driver: webdriver.Chrome, url, timeout=4):
         self.driver = driver
         self.url = url
         self.timeout = timeout
@@ -35,3 +35,5 @@ class BasePage:
             return self.driver.find_element(selector, locator)
         except TimeoutException:
             return False
+
+

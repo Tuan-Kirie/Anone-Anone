@@ -1,5 +1,4 @@
 import time
-
 from .pages.ranobe_list_page import RanobeListPage
 from .usable_consts import Consts
 from .pages.locators import RanobeListPageLocators
@@ -58,7 +57,7 @@ def test_filter_genre_search(driver):
 
 def test_filter_clearing(driver):
     """
-    sleep for ajax content changed
+    sleep for await ajax content changing
     :param driver:
     :return:
     """

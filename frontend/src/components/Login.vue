@@ -50,7 +50,7 @@
                     'username': this.username,
                     'email': this.email,
                     'password': this.password
-                })
+                }, {headers:{'async': false}})
                     .then(resp => {
                             console.log(resp);
                             this.Register_status = 'Успешная регистрация';
