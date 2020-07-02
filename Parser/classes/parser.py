@@ -197,6 +197,3 @@ class ImageParse:
             return 'media\\ranobe\\default.jpg'
 
 
-if __name__ == '__main__':
-    img = ImageParse(555, 'https://tl.rulate.ru/i/book/19/8/29162.jpg', None)
-    img.download_img_to_dest_path()
